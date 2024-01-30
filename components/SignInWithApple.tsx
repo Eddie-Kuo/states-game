@@ -8,8 +8,15 @@ export default function SignInWithApple() {
       <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-        cornerRadius={5}
-        style={{ width: 200, height: 64 }}
+        cornerRadius={25}
+        style={{
+          height: 40,
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'row',
+          padding: 24,
+        }}
         onPress={async () => {
           try {
             const credential = await AppleAuthentication.signInAsync({

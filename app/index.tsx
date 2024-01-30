@@ -1,16 +1,13 @@
-import SignInWithApple from '@/components/SignInWithApple';
+import { Redirect } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 
-const Page = () => {
+const index = () => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Hello World!!</Text>
-      <SignInWithApple />
+    <View style={{ flex: 1, justifyContent: 'center' }}>
+      <Redirect href={'/(public)/login'} />
     </View>
   );
 };
 
-export default Page;
-
-const styles = StyleSheet.create({});
+export default index;
