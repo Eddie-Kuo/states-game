@@ -1,8 +1,6 @@
 import { Slot } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
 // async storage cached token
 const tokenCache = {
   async getToken(key: string) {
