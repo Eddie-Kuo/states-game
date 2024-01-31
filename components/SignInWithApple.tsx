@@ -25,6 +25,8 @@ export default function SignInWithApple() {
                 AppleAuthentication.AppleAuthenticationScope.EMAIL,
               ],
             });
+            console.log('🚀 ~ onPress={ ~ credential:', credential);
+
             // Sign in via Supabase Auth.
             if (credential.identityToken) {
               const {
