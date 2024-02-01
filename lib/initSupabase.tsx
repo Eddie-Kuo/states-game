@@ -1,16 +1,29 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
+import * as SecureStore from 'expo-secure-store';
 import 'react-native-url-polyfill/auto';
 
-export const supabase = createClient(
-  'https://nkqnblcgpjimqjjqjzws.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rcW5ibGNncGppbXFqanFqendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDUwMTczMDAsImV4cCI6MjAyMDU5MzMwMH0.8FCU9rN9IyZJ8-xyouDHWAs4sS-QGiXzXOACU6VvYfg',
-  {
-    auth: {
-      storage: AsyncStorage,
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: false,
-    },
-  }
-);
+// Custom secure storage solution for the Supabase client to store the JWT
+const ExpoSecureStoreAdapter = {
+  getItem: (key: string) => {
+    return SecureStore.getItemAsync(key);
+  },
+  setItem: (key: string, value: string) => {
+    SecureStore.setItemAsync(key, value);
+  },
+  removeItem: (key: string) => {
+    SecureStore.deleteItemAsync(key);
+  },
+};
+
+const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const key = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+
+// initialize the supabase client
+export const supabase = createClient(url!, key!, {
+  auth: {
+    storage: ExpoSecureStoreAdapter as any,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: false,
+  },
+});
