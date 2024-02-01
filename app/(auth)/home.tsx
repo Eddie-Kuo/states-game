@@ -1,10 +1,15 @@
+import { supabase } from '@/lib/initSupabase';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 const Home = () => {
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
   return (
     <View style={styles.container}>
       <Text>Hello!! You are in the home screen</Text>
+      <Button title='Logout' onPress={signOut} />
     </View>
   );
 };
