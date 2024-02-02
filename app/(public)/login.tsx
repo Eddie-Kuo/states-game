@@ -1,11 +1,10 @@
 import SignInWithApple from '@/components/SignInWithApple';
-import Ionicons from '@expo/vector-icons/FontAwesome5';
+import SignInWithGoogle from '@/components/SignInWithGoogle';
 import {
   ImageBackground,
   StatusBar,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -31,7 +30,7 @@ const Login = () => {
           {/* Sign in with Native Apple sign in */}
           <SignInWithApple />
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => console.log('Signing in with google')}
             style={[
               styles.signInButton,
@@ -41,7 +40,9 @@ const Login = () => {
             <Text style={[styles.signInText, { color: 'darkslategray' }]}>
               Sign in with Google
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+
+          <SignInWithGoogle />
 
           <Text style={styles.disclaimerText}>
             By signing up for an account, you are agreeing to our community
