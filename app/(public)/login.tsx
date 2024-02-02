@@ -1,17 +1,14 @@
 import SignInWithApple from '@/components/SignInWithApple';
-import Ionicons from '@expo/vector-icons/FontAwesome5';
+import SignInWithGoogle from '@/components/SignInWithGoogle';
 import {
   ImageBackground,
   StatusBar,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
 const Login = () => {
-  // warming up the android browser to improve UX
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'light-content'} />
@@ -28,20 +25,8 @@ const Login = () => {
 
         {/* Bottom Buttons & Text */}
         <View style={styles.actionContainer}>
-          {/* Sign in with Native Apple sign in */}
           <SignInWithApple />
-
-          <TouchableOpacity
-            onPress={() => console.log('Signing in with google')}
-            style={[
-              styles.signInButton,
-              { backgroundColor: 'lightsteelblue' },
-            ]}>
-            <Ionicons name='google' size={16} color='darkslategrey' />
-            <Text style={[styles.signInText, { color: 'darkslategray' }]}>
-              Sign in with Google
-            </Text>
-          </TouchableOpacity>
+          <SignInWithGoogle />
 
           <Text style={styles.disclaimerText}>
             By signing up for an account, you are agreeing to our community
@@ -77,16 +62,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 3,
   },
-  signInButton: {
-    height: 40,
-    width: '100%',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 5,
-  },
-  signInText: { fontWeight: 'bold', fontSize: 18 },
   disclaimerText: {
     textAlign: 'center',
     paddingHorizontal: 2,

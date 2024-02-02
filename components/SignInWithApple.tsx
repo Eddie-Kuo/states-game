@@ -25,7 +25,6 @@ export default function SignInWithApple() {
                 AppleAuthentication.AppleAuthenticationScope.EMAIL,
               ],
             });
-
             // Sign in via Supabase Auth.
             if (credential.identityToken) {
               const {
@@ -50,5 +49,5 @@ export default function SignInWithApple() {
         }}
       />
     );
-  return <>{/* Implement Android Auth options. */}</>;
+  return <>{/* Todo: Implement Android Auth options. */}</>;
 }
