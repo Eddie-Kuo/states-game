@@ -1,9 +1,10 @@
 import { supabase } from '@/lib/initSupabase';
+import Ionicons from '@expo/vector-icons/AntDesign';
 import { makeRedirectUri } from 'expo-auth-session';
 import * as QueryParams from 'expo-auth-session/build/QueryParams';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
-import { Button } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession(); // required for web only
 const redirectTo = makeRedirectUri();
@@ -24,7 +25,7 @@ const createSessionFromUrl = async (url: string) => {
   return data.session;
 };
 
-const performOAuth = async () => {
+const performGoogleOAuth = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
@@ -45,27 +46,32 @@ const performOAuth = async () => {
   }
 };
 
-const sendMagicLink = async () => {
-  const { error } = await supabase.auth.signInWithOtp({
-    email: 'example@email.com',
-    options: {
-      emailRedirectTo: redirectTo,
-    },
-  });
-
-  if (error) throw error;
-  // Email sent.
-};
-
 export default function SignInWithGoogle() {
   // Handle linking into app from email app.
   const url = Linking.useURL();
   if (url) createSessionFromUrl(url);
 
   return (
-    <>
-      <Button onPress={performOAuth} title='Sign in with Google' />
-      <Button onPress={sendMagicLink} title='Send Magic Link' />
-    </>
+    <TouchableOpacity
+      onPress={performGoogleOAuth}
+      style={[styles.signInButton, { backgroundColor: 'lightsteelblue' }]}>
+      <Ionicons name='google' size={16} color='darkslategrey' />
+      <Text style={[styles.signInText, { color: 'darkslategray' }]}>
+        Sign in with Google
+      </Text>
+    </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  signInButton: {
+    height: 40,
+    width: '100%',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 5,
+  },
+  signInText: { fontWeight: 'bold', fontSize: 18 },
+});

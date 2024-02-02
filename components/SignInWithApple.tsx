@@ -49,5 +49,5 @@ export default function SignInWithApple() {
         }}
       />
     );
-  return <>{/* Implement Android Auth options. */}</>;
+  return <>{/* Todo: Implement Android Auth options. */}</>;
 }
