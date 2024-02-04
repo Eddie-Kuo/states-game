@@ -7,7 +7,7 @@ PODS:
     - ExpoModulesCore
   - EXFont (11.10.2):
     - ExpoModulesCore
-  - Expo (50.0.4):
+  - Expo (50.0.5):
     - ExpoModulesCore
   - ExpoAppleAuthentication (6.3.0):
     - ExpoModulesCore
@@ -1330,7 +1330,7 @@ SPEC CHECKSUMS:
   EXApplication: 137189a3f149b4e8e546884629392c3efc94cbd3
   EXConstants: 988aa430ca0f76b43cd46b66e7fae3287f9cc2fc
   EXFont: 21b9c760abd593ce8f0d5386b558ced76018506f
-  Expo: 1e3bcf9dd99de57a636127057f6b488f0609681a
+  Expo: 49cded7844f2ec4ffb1cc3b86504853f26952935
   ExpoAppleAuthentication: 4fc9972356977f009911f2f3a5f56319c2a5b11b
   ExpoCrypto: e2ca148f5c93a0514959df86b34256bb3c50d358
   ExpoFileSystem: 04795dd4d47e76eaf12e38c92091f77d794f9e7f
