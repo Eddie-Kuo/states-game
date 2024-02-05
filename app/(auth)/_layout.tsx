@@ -7,7 +7,24 @@ export default function Layout() {
   return (
     // Required after Expo SDK 50
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer>
+      <Drawer
+        screenOptions={{
+          drawerHideStatusBarOnOpen: true,
+          headerStyle: {
+            backgroundColor: 'transparent',
+            elevation: 0, // for Android
+            shadowOpacity: 0, // for iOS
+            borderBottomWidth: 0,
+          },
+          drawerActiveBackgroundColor: 'lightslategrey',
+          drawerActiveTintColor: '#fff',
+          drawerStyle: {
+            backgroundColor: '#fff',
+          },
+          drawerLabelStyle: {
+            marginLeft: -15,
+          },
+        }}>
         <Drawer.Screen
           name='home'
           options={{
