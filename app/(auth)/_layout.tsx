@@ -1,3 +1,4 @@
+import CustomDrawerContent from '@/components/CustomDrawerContent';
 import { Ionicons } from '@expo/vector-icons';
 import { Drawer } from 'expo-router/drawer';
 import 'react-native-gesture-handler';
@@ -8,6 +9,7 @@ export default function Layout() {
     // Required after Expo SDK 50
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
+        drawerContent={CustomDrawerContent}
         screenOptions={{
           drawerHideStatusBarOnOpen: true,
           headerStyle: {
