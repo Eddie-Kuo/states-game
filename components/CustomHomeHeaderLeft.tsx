@@ -10,7 +10,7 @@ const CustomHomeHeaderLeft = () => {
     <View
       style={{
         position: 'absolute',
-        bottom: -30,
+        bottom: -40,
         left: 20,
         gap: 6,
       }}>
