@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthProvider';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -18,7 +18,7 @@ const CustomDrawerContent = (props: any) => {
         scrollEnabled={false}
         contentContainerStyle={{ backgroundColor: 'lightslategray' }}>
         <View style={{ padding: 20 }}>
-          <TouchableOpacity
+          <View
             style={{
               width: 100,
               height: 100,
@@ -34,21 +34,7 @@ const CustomDrawerContent = (props: any) => {
                 borderRadius: 50,
               }}
             />
-            <View
-              style={{
-                zIndex: 10,
-                position: 'absolute',
-                bottom: 0,
-                right: 0,
-                backgroundColor: 'grey',
-                padding: 4,
-                borderRadius: 50,
-                borderWidth: 2,
-                borderColor: 'lightslategrey',
-              }}>
-              <Ionicons name='settings-outline' color={'white'} size={18} />
-            </View>
-          </TouchableOpacity>
+          </View>
           <Text
             style={{
               alignSelf: 'center',

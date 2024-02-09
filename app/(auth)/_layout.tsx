@@ -25,8 +25,20 @@ const AuthenticatedLayout = () => {
             drawerIcon: ({ color, size }) => (
               <Ionicons name='home' color={color} size={size} />
             ),
-
             headerLeft: () => <CustomHomeHeaderLeft />,
+            headerStyle: {
+              height: 120,
+            },
+            headerBackground: () => {
+              return (
+                <Image
+                  style={StyleSheet.absoluteFill}
+                  source={{
+                    uri: 'https://images.pexels.com/photos/1831234/pexels-photo-1831234.jpeg',
+                  }}
+                />
+              );
+            },
           }}
         />
         <Drawer.Screen
@@ -51,7 +63,6 @@ const CustomScreenOptions = {
     elevation: 0, // for Android
     shadowOpacity: 0, // for iOS
     borderBottomWidth: 0,
-    height: 120,
   },
   drawerActiveBackgroundColor: 'lightslategrey',
   drawerActiveTintColor: '#fff',
@@ -60,16 +71,6 @@ const CustomScreenOptions = {
   },
   drawerLabelStyle: {
     marginLeft: -15,
-  },
-  headerBackground: () => {
-    return (
-      <Image
-        style={StyleSheet.absoluteFill}
-        source={{
-          uri: 'https://images.pexels.com/photos/1831234/pexels-photo-1831234.jpeg',
-        }}
-      />
-    );
   },
 };
 
