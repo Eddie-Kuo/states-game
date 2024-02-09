@@ -32,7 +32,6 @@ export default function Layout() {
           options={{
             drawerLabel: 'Home',
             title: '',
-
             drawerIcon: ({ color, size }) => (
               <Ionicons name='home' color={color} size={size} />
             ),
@@ -44,7 +43,7 @@ export default function Layout() {
             drawerLabel: 'Users',
             title: '',
             drawerIcon: ({ color, size }) => (
-              <Ionicons name='person-circle' color={color} size={size} />
+              <Ionicons name='people' color={color} size={size} />
             ),
           }}
         />
