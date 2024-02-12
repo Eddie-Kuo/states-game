@@ -18,16 +18,23 @@ const CustomDrawerContent = (props: any) => {
         scrollEnabled={false}
         contentContainerStyle={{ backgroundColor: 'lightslategray' }}>
         <View style={{ padding: 20 }}>
-          <Image
-            source={require('../assets/images/placeholder.jpg')}
+          <View
             style={{
               width: 100,
               height: 100,
-              alignSelf: 'center',
               borderRadius: 50,
+              alignSelf: 'center',
               borderWidth: 0.2,
-            }}
-          />
+            }}>
+            <Image
+              source={require('@/assets/images/placeholder.jpg')}
+              style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: 50,
+              }}
+            />
+          </View>
           <Text
             style={{
               alignSelf: 'center',
@@ -41,7 +48,6 @@ const CustomDrawerContent = (props: any) => {
         </View>
         <View style={{ paddingVertical: 10, backgroundColor: '#fff' }}>
           <DrawerItemList {...props} />
-          {/* <DrawerItem label={'Logout'} onPress={() => signOut()} /> */}
         </View>
       </DrawerContentScrollView>
 
