@@ -1,12 +1,24 @@
 import { useAuth } from '@/context/AuthProvider';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const Home = () => {
   const { user } = useAuth();
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 5,
+          padding: 8,
+          borderWidth: 0.5,
+          margin: 4,
+          borderRadius: 25,
+        }}>
+        <Text>Edit Profile</Text>
+      </TouchableOpacity>
       <Text>Hello!! You are in the home screen</Text>
       <Text>Email: {user?.email}</Text>
     </View>
