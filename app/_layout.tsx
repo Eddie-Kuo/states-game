@@ -1,5 +1,6 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import { AuthProvider, useAuth } from '../context/AuthProvider';
 
 // Makes sure the user is authenticated before accessing protected pages
@@ -27,7 +28,24 @@ const InitialLayout = () => {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name='(modal)/ProfileEditModal'
-        options={{ presentation: 'modal' }}
+        options={{
+          presentation: 'modal',
+          headerShown: true,
+          headerTitle: 'Edit Profile',
+          headerStyle: {
+            backgroundColor: 'slategrey',
+          },
+          headerTitleStyle: {
+            color: '#fff',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Text style={{ color: '#fff', fontWeight: '300', fontSize: 18 }}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
       />
     </Stack>
   );

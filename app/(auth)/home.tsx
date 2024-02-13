@@ -13,9 +13,10 @@ const Home = () => {
         onPress={() => router.push('/ProfileEditModal')}
         style={{
           position: 'absolute',
-          top: 0,
+          top: 5,
           right: 5,
-          padding: 8,
+          paddingVertical: 8,
+          paddingHorizontal: 12,
           borderWidth: 0.5,
           margin: 4,
           borderRadius: 25,
