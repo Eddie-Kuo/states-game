@@ -1,4 +1,4 @@
-import { Slot, useRouter, useSegments } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { AuthProvider, useAuth } from '../context/AuthProvider';
 
@@ -23,7 +23,14 @@ const InitialLayout = () => {
     }
   }, [session, initialized]);
 
-  return <Slot />;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name='(modal)/ProfileEditModal'
+        options={{ presentation: 'modal' }}
+      />
+    </Stack>
+  );
 };
 
 // Wrap the app with the AuthProvider

@@ -1,13 +1,16 @@
 import { useAuth } from '@/context/AuthProvider';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const Home = () => {
   const { user } = useAuth();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
+        onPress={() => router.push('/ProfileEditModal')}
         style={{
           position: 'absolute',
           top: 0,
