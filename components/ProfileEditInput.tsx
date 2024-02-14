@@ -7,7 +7,7 @@ type ProfileEditInputProps = {
 
 const ProfileEditInput = ({ children }: ProfileEditInputProps) => {
   return (
-    <View style={{ marginHorizontal: 20, gap: 5 }}>
+    <View style={{ gap: 5, width: '90%' }}>
       <Text>{children}</Text>
       <TextInput
         placeholder={`${children}`}
