@@ -3,24 +3,25 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 type ProfileEditInputProps = {
   children: React.ReactNode;
+  label: string;
 };
 
-const ProfileEditInput = ({ children }: ProfileEditInputProps) => {
+const ProfileEditInput = ({ children, label }: ProfileEditInputProps) => {
   return (
-    <View style={{ gap: 5, width: '90%' }}>
-      <Text>{children}</Text>
-      <TextInput
-        placeholder={`${children}`}
-        style={{
-          borderWidth: 0.3,
-          padding: 10,
-          borderRadius: 10,
-        }}
-      />
+    <View style={styles.inputContainer}>
+      <Text>{label}</Text>
+      <TextInput placeholder={`${children}`} style={styles.input} />
     </View>
   );
 };
 
 export default ProfileEditInput;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  inputContainer: { gap: 5, width: '90%' },
+  input: {
+    borderWidth: 0.3,
+    padding: 10,
+    borderRadius: 10,
+  },
+});
