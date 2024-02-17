@@ -46,9 +46,15 @@ export const ProfileEditModal = () => {
       </View>
       <Text style={{ color: 'gray' }}>{userInfo?.email}</Text>
 
-      <ProfileEditInput>First Name</ProfileEditInput>
-      <ProfileEditInput>Last Name</ProfileEditInput>
-      <ProfileEditInput>Username </ProfileEditInput>
+      <ProfileEditInput label={'First Name'}>
+        {userInfo?.first_name ? userInfo.first_name : 'First Name'}
+      </ProfileEditInput>
+      <ProfileEditInput label={'Last Name'}>
+        {userInfo?.last_name ? userInfo.last_name : 'Last Name'}
+      </ProfileEditInput>
+      <ProfileEditInput label={'Username'}>
+        {userInfo?.username ? userInfo.username : 'Username'}
+      </ProfileEditInput>
       <TouchableOpacity
         style={{
           marginTop: 5,

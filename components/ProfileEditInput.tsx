@@ -3,12 +3,13 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 type ProfileEditInputProps = {
   children: React.ReactNode;
+  label: string;
 };
 
-const ProfileEditInput = ({ children }: ProfileEditInputProps) => {
+const ProfileEditInput = ({ children, label }: ProfileEditInputProps) => {
   return (
     <View style={{ gap: 5, width: '90%' }}>
-      <Text>{children}</Text>
+      <Text>{label}</Text>
       <TextInput
         placeholder={`${children}`}
         style={{
