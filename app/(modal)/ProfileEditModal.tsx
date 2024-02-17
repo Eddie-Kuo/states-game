@@ -1,8 +1,30 @@
+import { getUserInfo } from '@/actions/getUserInfo';
 import ProfileEditInput from '@/components/ProfileEditInput';
-import React from 'react';
+import { useAuth } from '@/context/AuthProvider';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const ProfileEditModal = () => {
+export interface UserInfo {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  username: string;
+}
+
+export const ProfileEditModal = () => {
+  const { user } = useAuth();
+  const [userInfo, setUserInfo] = useState<UserInfo | null>();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) return;
+      const data = await getUserInfo(user.id);
+      setUserInfo(data);
+    };
+    fetchUserData();
+  }, []);
+
   return (
     <View style={{ paddingTop: 20, gap: 10, alignItems: 'center' }}>
       <View
@@ -22,7 +44,7 @@ const ProfileEditModal = () => {
           }}
         />
       </View>
-      <Text style={{ color: 'gray' }}>ThisIsMyEmail@Gmail.com</Text>
+      <Text style={{ color: 'gray' }}>{userInfo?.email}</Text>
 
       <ProfileEditInput>First Name</ProfileEditInput>
       <ProfileEditInput>Last Name</ProfileEditInput>
