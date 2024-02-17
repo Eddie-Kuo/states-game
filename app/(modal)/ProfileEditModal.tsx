@@ -22,6 +22,8 @@ const ProfileEditModal = () => {
           }}
         />
       </View>
+      <Text style={{ color: 'gray' }}>ThisIsMyEmail@Gmail.com</Text>
+
       <ProfileEditInput>First Name</ProfileEditInput>
       <ProfileEditInput>Last Name</ProfileEditInput>
       <ProfileEditInput>Username </ProfileEditInput>
