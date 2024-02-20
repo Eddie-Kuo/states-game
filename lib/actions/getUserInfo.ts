@@ -1,5 +1,5 @@
-import { UserInfo } from '@/app/(modal)/ProfileEditModal';
 import { supabase } from '@/lib/initSupabase';
+import { UserInfo } from '@/types';
 
 export const getUserInfo = async (userId: string): Promise<UserInfo | null> => {
   const { data, error } = await supabase

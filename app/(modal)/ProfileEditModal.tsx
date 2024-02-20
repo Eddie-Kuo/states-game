@@ -1,29 +1,35 @@
-import { getUserInfo } from '@/actions/getUserInfo';
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
-import React, { useEffect, useState } from 'react';
+import { supabase } from '@/lib/initSupabase';
+import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export interface UserInfo {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  username: string;
-}
+/**
+ * Responsible for rendering out the form to allow users to edit their profile
+ * - handles the state of the individual input fields
+ * - function to update userData on submit
+ */
 
 export const ProfileEditModal = () => {
-  const { user } = useAuth();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>();
+  const { userInfo } = useAuth();
+  const [firstName, setFirstName] = useState(userInfo?.first_name);
+  const [lastName, setLastName] = useState(userInfo?.last_name);
+  const [username, setUsername] = useState(userInfo?.username);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user) return;
-      const data = await getUserInfo(user.id);
-      setUserInfo(data);
-    };
-    fetchUserData();
-  }, []);
+  const updateUserInfo = async () => {
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        first_name: firstName,
+        last_name: lastName,
+        username,
+      })
+      .eq('id', userInfo?.id);
+
+    if (error) {
+      console.log('Error updating user information:', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -35,16 +41,22 @@ export const ProfileEditModal = () => {
       </View>
       <Text style={styles.emailText}>{userInfo?.email}</Text>
 
-      <ProfileEditInput label={'First Name'}>
-        {userInfo?.first_name ? userInfo.first_name : 'First Name'}
-      </ProfileEditInput>
-      <ProfileEditInput label={'Last Name'}>
-        {userInfo?.last_name ? userInfo.last_name : 'Last Name'}
-      </ProfileEditInput>
-      <ProfileEditInput label={'Username'}>
-        {userInfo?.username ? userInfo.username : 'Username'}
-      </ProfileEditInput>
-      <TouchableOpacity style={styles.submitButton}>
+      <ProfileEditInput
+        label={'First Name'}
+        value={firstName}
+        onChangeText={setFirstName}
+      />
+      <ProfileEditInput
+        label={'Last Name'}
+        value={lastName}
+        onChangeText={setLastName}
+      />
+      <ProfileEditInput
+        label={'Username'}
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TouchableOpacity style={styles.submitButton} onPress={updateUserInfo}>
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
     </View>
