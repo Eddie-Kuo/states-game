@@ -6,14 +6,12 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
  */
 
 type ProfileEditInputProps = {
-  children: React.ReactNode;
   label: string;
-  value: string;
+  value: string | undefined;
   onChangeText: (value: string) => void;
 };
 
 const ProfileEditInput = ({
-  children,
   label,
   value,
   onChangeText,
@@ -22,7 +20,7 @@ const ProfileEditInput = ({
     <View style={styles.inputContainer}>
       <Text>{label}</Text>
       <TextInput
-        placeholder={`${children}`}
+        placeholder={value === null ? label : value}
         style={styles.input}
         value={value}
         onChangeText={onChangeText}

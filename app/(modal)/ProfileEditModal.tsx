@@ -21,15 +21,18 @@ export interface UserInfo {
 export const ProfileEditModal = () => {
   const { user } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfo | null>();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState<string | undefined>('');
+  const [lastName, setLastName] = useState<string | undefined>('');
+  const [username, setUsername] = useState<string | undefined>('');
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) return;
       const data = await getUserInfo(user.id);
       setUserInfo(data);
+      setFirstName(data?.first_name);
+      setLastName(data?.last_name);
+      setUsername(data?.username);
     };
     fetchUserData();
   }, []);
@@ -47,21 +50,18 @@ export const ProfileEditModal = () => {
       <ProfileEditInput
         label={'First Name'}
         value={firstName}
-        onChangeText={setFirstName}>
-        {userInfo?.first_name ? userInfo.first_name : 'First Name'}
-      </ProfileEditInput>
+        onChangeText={setFirstName}
+      />
       <ProfileEditInput
         label={'Last Name'}
         value={lastName}
-        onChangeText={setLastName}>
-        {userInfo?.last_name ? userInfo.last_name : 'Last Name'}
-      </ProfileEditInput>
+        onChangeText={setLastName}
+      />
       <ProfileEditInput
         label={'Username'}
         value={username}
-        onChangeText={setUsername}>
-        {userInfo?.username ? userInfo.username : 'Username'}
-      </ProfileEditInput>
+        onChangeText={setUsername}
+      />
       <TouchableOpacity style={styles.submitButton}>
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
