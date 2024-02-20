@@ -4,6 +4,12 @@ import { useAuth } from '@/context/AuthProvider';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+/**
+ * Responsible for rendering out the form to allow users to edit their profile
+ * - prefetches the data of the current user + pre populates fields
+ * - handles the state of the individual input fields
+ */
+
 export interface UserInfo {
   id: string;
   first_name: string;
@@ -15,6 +21,9 @@ export interface UserInfo {
 export const ProfileEditModal = () => {
   const { user } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfo | null>();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -35,13 +44,22 @@ export const ProfileEditModal = () => {
       </View>
       <Text style={styles.emailText}>{userInfo?.email}</Text>
 
-      <ProfileEditInput label={'First Name'}>
+      <ProfileEditInput
+        label={'First Name'}
+        value={firstName}
+        onChangeText={setFirstName}>
         {userInfo?.first_name ? userInfo.first_name : 'First Name'}
       </ProfileEditInput>
-      <ProfileEditInput label={'Last Name'}>
+      <ProfileEditInput
+        label={'Last Name'}
+        value={lastName}
+        onChangeText={setLastName}>
         {userInfo?.last_name ? userInfo.last_name : 'Last Name'}
       </ProfileEditInput>
-      <ProfileEditInput label={'Username'}>
+      <ProfileEditInput
+        label={'Username'}
+        value={username}
+        onChangeText={setUsername}>
         {userInfo?.username ? userInfo.username : 'Username'}
       </ProfileEditInput>
       <TouchableOpacity style={styles.submitButton}>
