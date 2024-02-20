@@ -1,42 +1,20 @@
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
-import { getUserInfo } from '@/lib/actions/getUserInfo';
 import { supabase } from '@/lib/initSupabase';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /**
  * Responsible for rendering out the form to allow users to edit their profile
- * - prefetches the data of the current user + pre populates fields
  * - handles the state of the individual input fields
+ * - function to update userData on submit
  */
 
-export interface UserInfo {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  username: string;
-}
-
 export const ProfileEditModal = () => {
-  const { user } = useAuth();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>();
-  const [firstName, setFirstName] = useState<string | undefined>('');
-  const [lastName, setLastName] = useState<string | undefined>('');
-  const [username, setUsername] = useState<string | undefined>('');
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user) return;
-      const data = await getUserInfo(user.id);
-      setUserInfo(data);
-      setFirstName(data?.first_name);
-      setLastName(data?.last_name);
-      setUsername(data?.username);
-    };
-    fetchUserData();
-  }, []);
+  const { userInfo } = useAuth();
+  const [firstName, setFirstName] = useState(userInfo?.first_name);
+  const [lastName, setLastName] = useState(userInfo?.last_name);
+  const [username, setUsername] = useState(userInfo?.username);
 
   const updateUserInfo = async () => {
     const { error } = await supabase
