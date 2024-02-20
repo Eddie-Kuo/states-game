@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthProvider';
 import { getUserInfo } from '@/lib/actions/getUserInfo';
 import { supabase } from '@/lib/initSupabase';
 import { UserInfo } from '@/types';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -13,6 +14,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  */
 
 export const ProfileEditModal = () => {
+  const router = useRouter();
   const { user } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfo | null>();
   const [firstName, setFirstName] = useState(userInfo?.first_name);
@@ -42,6 +44,8 @@ export const ProfileEditModal = () => {
     if (error) {
       console.log('Error updating user information:', error.message);
     }
+
+    router.back();
   };
 
   return (
