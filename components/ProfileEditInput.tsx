@@ -9,18 +9,20 @@ type ProfileEditInputProps = {
   label: string;
   value: string | undefined;
   onChangeText: (value: string) => void;
+  placeholder: string | undefined;
 };
 
 const ProfileEditInput = ({
   label,
   value,
   onChangeText,
+  placeholder,
 }: ProfileEditInputProps) => {
   return (
     <View style={styles.inputContainer}>
       <Text>{label}</Text>
       <TextInput
-        placeholder={value === null ? label : value}
+        placeholder={placeholder === undefined ? label : placeholder}
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
