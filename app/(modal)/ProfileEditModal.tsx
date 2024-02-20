@@ -1,6 +1,7 @@
-import { getUserInfo } from '@/actions/getUserInfo';
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
+import { getUserInfo } from '@/lib/actions/getUserInfo';
+import { supabase } from '@/lib/initSupabase';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -37,6 +38,21 @@ export const ProfileEditModal = () => {
     fetchUserData();
   }, []);
 
+  const updateUserInfo = async () => {
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        first_name: firstName,
+        last_name: lastName,
+        username,
+      })
+      .eq('id', userInfo?.id);
+
+    if (error) {
+      console.log('Error updating user information:', error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -62,7 +78,7 @@ export const ProfileEditModal = () => {
         value={username}
         onChangeText={setUsername}
       />
-      <TouchableOpacity style={styles.submitButton}>
+      <TouchableOpacity style={styles.submitButton} onPress={updateUserInfo}>
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
     </View>
