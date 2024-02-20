@@ -1,7 +1,10 @@
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
+import { getUserInfo } from '@/lib/actions/getUserInfo';
 import { supabase } from '@/lib/initSupabase';
-import React, { useState } from 'react';
+import { UserInfo } from '@/types';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /**
@@ -11,10 +14,22 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  */
 
 export const ProfileEditModal = () => {
-  const { userInfo } = useAuth();
+  const router = useRouter();
+  const { user } = useAuth();
+  const [userInfo, setUserInfo] = useState<UserInfo | null>();
   const [firstName, setFirstName] = useState(userInfo?.first_name);
   const [lastName, setLastName] = useState(userInfo?.last_name);
   const [username, setUsername] = useState(userInfo?.username);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) return;
+      const data = await getUserInfo(user.id);
+      setUserInfo(data);
+    };
+
+    fetchUserData();
+  }, []);
 
   const updateUserInfo = async () => {
     const { error } = await supabase
@@ -29,6 +44,8 @@ export const ProfileEditModal = () => {
     if (error) {
       console.log('Error updating user information:', error.message);
     }
+
+    router.back();
   };
 
   return (
@@ -45,16 +62,19 @@ export const ProfileEditModal = () => {
         label={'First Name'}
         value={firstName}
         onChangeText={setFirstName}
+        placeholder={userInfo?.first_name}
       />
       <ProfileEditInput
         label={'Last Name'}
         value={lastName}
         onChangeText={setLastName}
+        placeholder={userInfo?.last_name}
       />
       <ProfileEditInput
         label={'Username'}
         value={username}
         onChangeText={setUsername}
+        placeholder={userInfo?.username}
       />
       <TouchableOpacity style={styles.submitButton} onPress={updateUserInfo}>
         <Text style={styles.submitButtonText}>Submit</Text>
