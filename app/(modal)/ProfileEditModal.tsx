@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthProvider';
 import { getUserInfo } from '@/lib/actions/getUserInfo';
 import { supabase } from '@/lib/initSupabase';
 import { UserInfo } from '@/types';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -48,6 +49,11 @@ export const ProfileEditModal = () => {
     router.back();
   };
 
+  // Image picker function
+  const onSelectImage = async () => {
+    // TODO
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -55,6 +61,19 @@ export const ProfileEditModal = () => {
           source={require('@/assets/images/placeholder.jpg')}
           style={styles.image}
         />
+        <TouchableOpacity
+          onPress={onSelectImage}
+          style={{
+            position: 'absolute',
+            right: 0,
+            bottom: 0,
+            padding: 5,
+            borderWidth: 0.2,
+            backgroundColor: '#fff',
+            borderRadius: 25,
+          }}>
+          <Ionicons name='camera-outline' size={20} color={'grey'} />
+        </TouchableOpacity>
       </View>
       <Text style={styles.emailText}>{userInfo?.email}</Text>
 
