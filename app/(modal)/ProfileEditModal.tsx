@@ -52,6 +52,25 @@ export const ProfileEditModal = () => {
     router.back();
   };
 
+  const updateUserAvatarURL = async (data: string) => {
+    // get public url
+    const { data: publicURL } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(data);
+
+    // update user avatar_url
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        avatar_url: publicURL.publicUrl,
+      })
+      .eq('id', userInfo?.id);
+
+    if (error) {
+      console.log('Error updating user avatar:', error.message);
+    }
+  };
+
   // Image picker function
   const onSelectImage = async () => {
     const options: ImagePicker.ImagePickerOptions = {
@@ -70,9 +89,10 @@ export const ProfileEditModal = () => {
         image.type === 'image' ? 'png' : 'mp4'
       }`;
       const contentType = image.type === 'image' ? 'image/png' : 'video/mp4';
-      await supabase.storage
+      const { data } = await supabase.storage
         .from('avatars')
         .upload(filePath, decode(base64), { contentType });
+      updateUserAvatarURL(data!.path);
     }
   };
 
@@ -80,7 +100,8 @@ export const ProfileEditModal = () => {
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
-          source={require('@/assets/images/placeholder.jpg')}
+          // source={require('@/assets/images/placeholder.jpg')}
+          source={{ uri: userInfo?.avatar_url }}
           style={styles.image}
         />
         <TouchableOpacity
