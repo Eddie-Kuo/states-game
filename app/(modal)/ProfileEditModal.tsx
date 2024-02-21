@@ -4,6 +4,9 @@ import { getUserInfo } from '@/lib/actions/getUserInfo';
 import { supabase } from '@/lib/initSupabase';
 import { UserInfo } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
+import { decode } from 'base64-arraybuffer';
+import * as FileSystem from 'expo-file-system';
+import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -51,7 +54,26 @@ export const ProfileEditModal = () => {
 
   // Image picker function
   const onSelectImage = async () => {
-    // TODO
+    const options: ImagePicker.ImagePickerOptions = {
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+    };
+
+    const result = await ImagePicker.launchImageLibraryAsync(options);
+
+    if (!result.canceled) {
+      const image = result.assets[0];
+      const base64 = await FileSystem.readAsStringAsync(image.uri, {
+        encoding: 'base64',
+      });
+      const filePath = `${user!.id}/${new Date().getTime()}.${
+        image.type === 'image' ? 'png' : 'mp4'
+      }`;
+      const contentType = image.type === 'image' ? 'image/png' : 'video/mp4';
+      await supabase.storage
+        .from('avatars')
+        .upload(filePath, decode(base64), { contentType });
+    }
   };
 
   return (
