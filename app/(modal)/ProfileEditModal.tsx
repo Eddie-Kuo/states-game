@@ -1,3 +1,4 @@
+import AvatarImage from '@/components/AvatarImage';
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
 import { getUserInfo } from '@/lib/actions/getUserInfo';
@@ -9,7 +10,7 @@ import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /**
  * Responsible for rendering out the form to allow users to edit their profile
@@ -99,24 +100,21 @@ export const ProfileEditModal = () => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image
-          // source={require('@/assets/images/placeholder.jpg')}
-          source={{ uri: userInfo?.avatar_url }}
-          style={styles.image}
-        />
-        <TouchableOpacity
-          onPress={onSelectImage}
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            padding: 5,
-            borderWidth: 0.2,
-            backgroundColor: '#fff',
-            borderRadius: 25,
-          }}>
-          <Ionicons name='camera-outline' size={20} color={'grey'} />
-        </TouchableOpacity>
+        <AvatarImage styleProps={styles.image} avatarUrl={userInfo?.avatar_url}>
+          <TouchableOpacity
+            onPress={onSelectImage}
+            style={{
+              position: 'absolute',
+              right: 0,
+              bottom: 0,
+              padding: 5,
+              borderWidth: 0.2,
+              backgroundColor: '#fff',
+              borderRadius: 25,
+            }}>
+            <Ionicons name='camera-outline' size={20} color={'grey'} />
+          </TouchableOpacity>
+        </AvatarImage>
       </View>
       <Text style={styles.emailText}>{userInfo?.email}</Text>
 
