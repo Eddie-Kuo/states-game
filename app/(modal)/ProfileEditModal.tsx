@@ -103,7 +103,7 @@ export const ProfileEditModal = () => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <AvatarImage styleProps={styles.image} avatarUrl={userInfo?.avatar_url}>
+        <AvatarImage styleProps={styles.image}>
           <TouchableOpacity
             onPress={onSelectImage}
             style={{

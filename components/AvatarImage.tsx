@@ -1,6 +1,9 @@
-import placeholder from '@/assets/images/placeholder.jpg';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
+// @ts-ignore
+import placeholder from '@/assets/images/placeholder.jpg';
+import { useAuth } from '@/context/AuthProvider';
+import { getUserInfo } from '@/lib/actions/getUserInfo';
 const avatar_placeholder = Image.resolveAssetSource(placeholder).uri;
 
 type AvatarImageProps = {
@@ -9,14 +12,26 @@ type AvatarImageProps = {
   children?: React.ReactNode;
 };
 
-const AvatarImage = ({ styleProps, avatarUrl, children }: AvatarImageProps) => {
+const AvatarImage = ({ styleProps, children }: AvatarImageProps) => {
+  const { user } = useAuth();
+  const [avatarURL, setAvatarURL] = useState<string>(avatar_placeholder);
+
+  useEffect(() => {
+    const fetchUserAvatarURL = async () => {
+      if (!user) return;
+      const data = await getUserInfo(user.id);
+      setAvatarURL(data!.avatar_url);
+    };
+    fetchUserAvatarURL();
+  });
+
   return (
     <View
       style={{
         ...styleProps,
       }}>
       <Image
-        source={avatarUrl ? { uri: avatarUrl } : { uri: avatar_placeholder }}
+        source={{ uri: avatarURL }}
         style={{
           width: '100%',
           height: '100%',
@@ -30,4 +45,4 @@ const AvatarImage = ({ styleProps, avatarUrl, children }: AvatarImageProps) => {
 
 export default AvatarImage;
 
-const styles = StyleSheet.create({ container: {} });
+const styles = StyleSheet.create({});
