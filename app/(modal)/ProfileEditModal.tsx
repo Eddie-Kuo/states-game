@@ -16,6 +16,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  * Responsible for rendering out the form to allow users to edit their profile
  * - handles the state of the individual input fields
  * - function to update userData on submit
+ * - function to handle image selection from camera roll
+ * - function to download image public url and update user information
  */
 
 export const ProfileEditModal = () => {
@@ -36,6 +38,7 @@ export const ProfileEditModal = () => {
     fetchUserData();
   }, []);
 
+  // this is where tanstack query would be useful
   const updateUserInfo = async () => {
     const { error } = await supabase
       .from('profiles')
