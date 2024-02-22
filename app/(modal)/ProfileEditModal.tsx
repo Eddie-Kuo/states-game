@@ -2,14 +2,11 @@ import AvatarImage from '@/components/AvatarImage';
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
 import { getUserInfo } from '@/lib/actions/getUserInfo';
-import { updateUserAvatarURL } from '@/lib/actions/updateUserAvatarURL';
+import { selectNewImage } from '@/lib/actions/selectNewImage';
 import { updateUserInfo } from '@/lib/actions/updateUserInfo';
-import { supabase } from '@/lib/initSupabase';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { decode } from 'base64-arraybuffer';
-import * as FileSystem from 'expo-file-system';
-import * as ImagePicker from 'expo-image-picker';
+
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -48,7 +45,13 @@ export const ProfileEditModal = () => {
     },
   });
 
-  // this is where tanstack query would be useful
+  const { mutateAsync: updateUserAvatarImage } = useMutation({
+    mutationFn: selectNewImage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+    },
+  });
+
   const handleUpdateUserInfo = async () => {
     const userId = userInfo!.id;
     try {
@@ -59,29 +62,12 @@ export const ProfileEditModal = () => {
     }
   };
 
-  // Image picker function
-  const onSelectImage = async () => {
-    const options: ImagePicker.ImagePickerOptions = {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-    };
-
-    const result = await ImagePicker.launchImageLibraryAsync(options);
-
-    if (!result.canceled) {
-      const image = result.assets[0];
-      const base64 = await FileSystem.readAsStringAsync(image.uri, {
-        encoding: 'base64',
-      });
-      const filePath = `${user!.id}/${new Date().getTime()}.${
-        image.type === 'image' ? 'png' : 'mp4'
-      }`;
-      const contentType = image.type === 'image' ? 'image/png' : 'video/mp4';
-      const { data } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, decode(base64), { contentType });
-      updateUserAvatarURL(data!.path, userInfo!.id);
-    }
+  const handleUpdateUserImage = async () => {
+    if (!userInfo) return;
+    const userId = userInfo.id;
+    try {
+      await updateUserAvatarImage(userId);
+    } catch (error) {}
   };
 
   return (
@@ -89,7 +75,7 @@ export const ProfileEditModal = () => {
       <View style={styles.imageContainer}>
         <AvatarImage styleProps={styles.image}>
           <TouchableOpacity
-            onPress={onSelectImage}
+            onPress={handleUpdateUserImage}
             style={{
               position: 'absolute',
               right: 0,
