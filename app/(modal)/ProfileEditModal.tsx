@@ -2,110 +2,81 @@ import AvatarImage from '@/components/AvatarImage';
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
 import { getUserInfo } from '@/lib/actions/getUserInfo';
-import { supabase } from '@/lib/initSupabase';
-import { UserInfo } from '@/types';
+import { selectNewImage } from '@/lib/actions/selectNewImage';
+import { updateUserInfo } from '@/lib/actions/updateUserInfo';
 import { Ionicons } from '@expo/vector-icons';
-import { decode } from 'base64-arraybuffer';
-import * as FileSystem from 'expo-file-system';
-import * as ImagePicker from 'expo-image-picker';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /**
  * Responsible for rendering out the form to allow users to edit their profile
  * - handles the state of the individual input fields
  * - function to update userData on submit
- * - function to handle image selection from camera roll
- * - function to download image public url and update user information
  */
 
 export const ProfileEditModal = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { user } = useAuth();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>();
-  const [firstName, setFirstName] = useState(userInfo?.first_name);
-  const [lastName, setLastName] = useState(userInfo?.last_name);
-  const [username, setUsername] = useState(userInfo?.username);
+  const [firstName, setFirstName] = useState<string>();
+  const [lastName, setLastName] = useState<string | undefined>();
+  const [username, setUsername] = useState<string | undefined>();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user) return;
-      const data = await getUserInfo(user.id);
-      setUserInfo(data);
-    };
-
-    fetchUserData();
-  }, []);
-
-  // this is where tanstack query would be useful
-  const updateUserInfo = async () => {
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        first_name: firstName,
-        last_name: lastName,
-        username,
-      })
-      .eq('id', userInfo?.id);
-
-    if (error) {
-      console.log('Error updating user information:', error.message);
-    }
-
-    router.back();
+  const fetchUserData = async () => {
+    if (!user) return;
+    const data = await getUserInfo(user.id);
+    return data;
   };
 
-  const updateUserAvatarURL = async (data: string) => {
-    // get public url
-    const { data: publicURL } = supabase.storage
-      .from('avatars')
-      .getPublicUrl(data);
+  const { data: userInfo } = useQuery({
+    queryKey: ['userInfo'],
+    queryFn: fetchUserData,
+  });
 
-    // update user avatar_url
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        avatar_url: publicURL.publicUrl,
-      })
-      .eq('id', userInfo?.id);
+  const { mutateAsync: updateUser } = useMutation({
+    mutationFn: updateUserInfo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+    },
+  });
 
-    if (error) {
-      console.log('Error updating user avatar:', error.message);
+  const { mutateAsync: updateUserAvatarImage } = useMutation({
+    mutationFn: selectNewImage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+    },
+  });
+
+  const handleUpdateUserInfo = async () => {
+    const userId = userInfo!.id;
+    try {
+      await updateUser({ firstName, lastName, username, userId });
+    } catch (error) {
+      console.log('🚀 ~ handleUpdateUserInfo ~ error:', error);
+    } finally {
+      router.back();
     }
   };
 
-  // Image picker function
-  const onSelectImage = async () => {
-    const options: ImagePicker.ImagePickerOptions = {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-    };
-
-    const result = await ImagePicker.launchImageLibraryAsync(options);
-
-    if (!result.canceled) {
-      const image = result.assets[0];
-      const base64 = await FileSystem.readAsStringAsync(image.uri, {
-        encoding: 'base64',
-      });
-      const filePath = `${user!.id}/${new Date().getTime()}.${
-        image.type === 'image' ? 'png' : 'mp4'
-      }`;
-      const contentType = image.type === 'image' ? 'image/png' : 'video/mp4';
-      const { data } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, decode(base64), { contentType });
-      updateUserAvatarURL(data!.path);
+  const handleUpdateUserImage = async () => {
+    if (!userInfo) return;
+    const userId = userInfo.id;
+    try {
+      await updateUserAvatarImage(userId);
+    } catch (error) {
+      console.log('🚀 ~ handleUpdateUserImage ~ error:', error);
     }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <AvatarImage styleProps={styles.image} avatarUrl={userInfo?.avatar_url}>
+        <AvatarImage styleProps={styles.image}>
           <TouchableOpacity
-            onPress={onSelectImage}
+            onPress={handleUpdateUserImage}
             style={{
               position: 'absolute',
               right: 0,
@@ -139,7 +110,9 @@ export const ProfileEditModal = () => {
         onChangeText={setUsername}
         placeholder={userInfo?.username}
       />
-      <TouchableOpacity style={styles.submitButton} onPress={updateUserInfo}>
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleUpdateUserInfo}>
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
     </View>

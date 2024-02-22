@@ -1,7 +1,11 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import { AuthProvider, useAuth } from '../context/AuthProvider';
+
+// tanstack query
+const queryClient = new QueryClient();
 
 // Makes sure the user is authenticated before accessing protected pages
 const InitialLayout = () => {
@@ -55,7 +59,9 @@ const InitialLayout = () => {
 const RootLayout = () => {
   return (
     <AuthProvider>
-      <InitialLayout />
+      <QueryClientProvider client={queryClient}>
+        <InitialLayout />
+      </QueryClientProvider>
     </AuthProvider>
   );
 };
