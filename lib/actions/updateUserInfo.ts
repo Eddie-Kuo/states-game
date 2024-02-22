@@ -1,5 +1,9 @@
 import { supabase } from '../initSupabase';
 
+/**
+ * Responsible for updating the user's information in the profiles table
+ */
+
 type updateUserInfoProps = {
   firstName: string | undefined;
   lastName: string | undefined;

@@ -1,5 +1,11 @@
 import { supabase } from '../initSupabase';
 
+/**
+ * Responsible for populating the user's avatar_url in profiles table
+ * @param data string
+ * @param userId string
+ */
+
 export const updateUserAvatarURL = async (data: string, userId: string) => {
   // get public url
   const { data: publicURL } = supabase.storage

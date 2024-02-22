@@ -15,8 +15,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  * Responsible for rendering out the form to allow users to edit their profile
  * - handles the state of the individual input fields
  * - function to update userData on submit
- * - function to handle image selection from camera roll
- * - function to download image public url and update user information
  */
 
 export const ProfileEditModal = () => {
@@ -57,6 +55,7 @@ export const ProfileEditModal = () => {
     try {
       await updateUser({ firstName, lastName, username, userId });
     } catch (error) {
+      console.log('🚀 ~ handleUpdateUserInfo ~ error:', error);
     } finally {
       router.back();
     }
@@ -67,7 +66,9 @@ export const ProfileEditModal = () => {
     const userId = userInfo.id;
     try {
       await updateUserAvatarImage(userId);
-    } catch (error) {}
+    } catch (error) {
+      console.log('🚀 ~ handleUpdateUserImage ~ error:', error);
+    }
   };
 
   return (

@@ -4,6 +4,11 @@ import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '../initSupabase';
 import { updateUserAvatarURL } from './updateUserAvatarURL';
 
+/**
+ * Responsible for handling the selection of an image through camera roll
+ * @param userId string
+ */
+
 export const selectNewImage = async (userId: string) => {
   const options: ImagePicker.ImagePickerOptions = {
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
