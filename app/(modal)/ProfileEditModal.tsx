@@ -2,14 +2,15 @@ import AvatarImage from '@/components/AvatarImage';
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
 import { getUserInfo } from '@/lib/actions/getUserInfo';
+import { updateUserInfo } from '@/lib/actions/updateUserInfo';
 import { supabase } from '@/lib/initSupabase';
-import { UserInfo } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { decode } from 'base64-arraybuffer';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /**
@@ -21,39 +22,40 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  */
 
 export const ProfileEditModal = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { user } = useAuth();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>();
-  const [firstName, setFirstName] = useState(userInfo?.first_name);
-  const [lastName, setLastName] = useState(userInfo?.last_name);
-  const [username, setUsername] = useState(userInfo?.username);
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user) return;
-      const data = await getUserInfo(user.id);
-      setUserInfo(data);
-    };
+  const fetchUserData = async () => {
+    if (!user) return;
+    const data = await getUserInfo(user.id);
+    return data;
+  };
 
-    fetchUserData();
-  }, []);
+  const { data: userInfo } = useQuery({
+    queryKey: ['userInfo'],
+    queryFn: fetchUserData,
+  });
+
+  const { mutateAsync: updateUser } = useMutation({
+    mutationFn: updateUserInfo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+    },
+  });
 
   // this is where tanstack query would be useful
-  const updateUserInfo = async () => {
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        first_name: firstName,
-        last_name: lastName,
-        username,
-      })
-      .eq('id', userInfo?.id);
-
-    if (error) {
-      console.log('Error updating user information:', error.message);
+  const handleUpdateUserInfo = async () => {
+    const userId = userInfo!.id;
+    try {
+      await updateUser({ firstName, lastName, username, userId });
+    } catch (error) {
+    } finally {
+      router.back();
     }
-
-    router.back();
   };
 
   const updateUserAvatarURL = async (data: string) => {
@@ -139,7 +141,9 @@ export const ProfileEditModal = () => {
         onChangeText={setUsername}
         placeholder={userInfo?.username}
       />
-      <TouchableOpacity style={styles.submitButton} onPress={updateUserInfo}>
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleUpdateUserInfo}>
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
     </View>
