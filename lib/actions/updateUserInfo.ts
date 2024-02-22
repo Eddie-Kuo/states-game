@@ -1,9 +1,9 @@
 import { supabase } from '../initSupabase';
 
 type updateUserInfoProps = {
-  firstName: string;
-  lastName: string;
-  username: string;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  username: string | undefined;
   userId: string;
 };
 

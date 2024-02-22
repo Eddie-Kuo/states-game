@@ -2,6 +2,7 @@ import AvatarImage from '@/components/AvatarImage';
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
 import { getUserInfo } from '@/lib/actions/getUserInfo';
+import { updateUserAvatarURL } from '@/lib/actions/updateUserAvatarURL';
 import { updateUserInfo } from '@/lib/actions/updateUserInfo';
 import { supabase } from '@/lib/initSupabase';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,9 +26,9 @@ export const ProfileEditModal = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { user } = useAuth();
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [username, setUsername] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>();
+  const [lastName, setLastName] = useState<string | undefined>();
+  const [username, setUsername] = useState<string | undefined>();
 
   const fetchUserData = async () => {
     if (!user) return;
@@ -58,25 +59,6 @@ export const ProfileEditModal = () => {
     }
   };
 
-  const updateUserAvatarURL = async (data: string) => {
-    // get public url
-    const { data: publicURL } = supabase.storage
-      .from('avatars')
-      .getPublicUrl(data);
-
-    // update user avatar_url
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        avatar_url: publicURL.publicUrl,
-      })
-      .eq('id', userInfo?.id);
-
-    if (error) {
-      console.log('Error updating user avatar:', error.message);
-    }
-  };
-
   // Image picker function
   const onSelectImage = async () => {
     const options: ImagePicker.ImagePickerOptions = {
@@ -98,7 +80,7 @@ export const ProfileEditModal = () => {
       const { data } = await supabase.storage
         .from('avatars')
         .upload(filePath, decode(base64), { contentType });
-      updateUserAvatarURL(data!.path);
+      updateUserAvatarURL(data!.path, userInfo!.id);
     }
   };
 
