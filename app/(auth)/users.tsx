@@ -1,3 +1,4 @@
+import { useAuth } from '@/context/AuthProvider';
 import { supabase } from '@/lib/initSupabase';
 import React, { useEffect, useState } from 'react';
 import {
@@ -21,10 +22,15 @@ interface Profile {
 
 const Users = () => {
   const [users, setUsers] = useState<Profile[] | null>();
+  const { user } = useAuth();
 
   useEffect(() => {
+    if (!user) return;
     const fetchUsers = async () => {
-      const { data } = await supabase.from('profiles').select();
+      const { data } = await supabase
+        .from('profiles')
+        .select()
+        .neq('id', user.id);
 
       setUsers(data);
     };
