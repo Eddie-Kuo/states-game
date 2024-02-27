@@ -5,6 +5,7 @@ import {
   FlatList,
   Image,
   ListRenderItem,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -22,6 +23,7 @@ interface Profile {
 
 const Users = () => {
   const [users, setUsers] = useState<Profile[] | null>();
+  const [openModal, setOpenModal] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -38,9 +40,27 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  const confirmationModal = () => {
+    return (
+      <Modal visible={openModal} animationType='slide' transparent={true}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'transparent',
+          }}>
+          <Text>Hello from inside the modal</Text>
+        </View>
+      </Modal>
+    );
+  };
+
   const renderUsers: ListRenderItem<Profile> = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.listItemContainer}>
+      <TouchableOpacity
+        style={styles.listItemContainer}
+        onPress={() => setOpenModal(true)}>
         <View style={styles.listItemDetailsContainer}>
           {item.avatar_url ? (
             <Image
@@ -70,6 +90,7 @@ const Users = () => {
         data={users}
         keyExtractor={(user) => user.id}
       />
+      {confirmationModal()}
     </View>
   );
 };
