@@ -24,6 +24,7 @@ interface Profile {
 const Users = () => {
   const [users, setUsers] = useState<Profile[] | null>();
   const [openModal, setOpenModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<Profile | null>();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const Users = () => {
     fetchUsers();
   }, []);
 
-  const confirmationModal = () => {
+  const confirmationModal = (user: Profile) => {
     return (
       <Modal visible={openModal} animationType='slide' transparent={true}>
         <View
@@ -50,17 +51,38 @@ const Users = () => {
             alignItems: 'center',
             backgroundColor: 'transparent',
           }}>
-          <Text>Hello from inside the modal</Text>
+          <View
+            style={{
+              backgroundColor: 'lightpink',
+              width: '90%',
+              height: 200,
+              padding: 15,
+              borderRadius: 15,
+            }}>
+            <TouchableOpacity onPress={() => setOpenModal(false)}>
+              <Text>Close</Text>
+            </TouchableOpacity>
+            <Text>Would you like to start a game with {user?.email}</Text>
+            <TouchableOpacity>
+              <Text>Confirm</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     );
   };
 
+  const openConfirmationModal = (user: Profile) => {
+    setSelectedUser(user);
+    setOpenModal(true);
+  };
+
+  // Render items function for Flatlist
   const renderUsers: ListRenderItem<Profile> = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.listItemContainer}
-        onPress={() => setOpenModal(true)}>
+        onPress={() => openConfirmationModal(item)}>
         <View style={styles.listItemDetailsContainer}>
           {item.avatar_url ? (
             <Image
@@ -90,7 +112,7 @@ const Users = () => {
         data={users}
         keyExtractor={(user) => user.id}
       />
-      {confirmationModal()}
+      {confirmationModal(selectedUser!)}
     </View>
   );
 };
