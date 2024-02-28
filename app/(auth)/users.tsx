@@ -1,5 +1,5 @@
+import { useUserList } from '@/api/user-customization';
 import { useAuth } from '@/context/AuthProvider';
-import { supabase } from '@/lib/initSupabase';
 import React, { useEffect, useState } from 'react';
 import {
   FlatList,
@@ -27,19 +27,13 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState<Profile | null>();
   const { user } = useAuth();
 
+  const { data: userList } = useUserList(user!.id);
+
   useEffect(() => {
-    if (!user) return;
-    const fetchUsers = async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select()
-        .neq('id', user.id);
-
-      setUsers(data);
-    };
-
-    fetchUsers();
-  }, []);
+    if (userList) {
+      setUsers(userList);
+    }
+  }, [userList]);
 
   const confirmationModal = (user: Profile) => {
     return (

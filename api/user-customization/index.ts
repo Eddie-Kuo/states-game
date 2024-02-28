@@ -6,6 +6,22 @@ import { selectNewImage } from '@/lib/actions/selectNewImage';
 import { supabase } from '@/lib/initSupabase';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+export const useUserList = (userId: string) => {
+  return useQuery({
+    queryKey: ['userList'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select()
+        .neq('id', userId);
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data;
+    },
+  });
+};
+
 export const useUserInfo = (userId: string) => {
   return useQuery({
     queryKey: ['userInfo'],
