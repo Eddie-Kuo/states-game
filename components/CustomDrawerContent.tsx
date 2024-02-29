@@ -4,8 +4,9 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AvatarImage from './AvatarImage';
 
 const CustomDrawerContent = (props: any) => {
   const { user, signOut } = useAuth();
@@ -18,23 +19,16 @@ const CustomDrawerContent = (props: any) => {
         scrollEnabled={false}
         contentContainerStyle={{ backgroundColor: 'lightslategray' }}>
         <View style={{ padding: 20 }}>
-          <View
-            style={{
+          <AvatarImage
+            styleProps={{
               width: 100,
               height: 100,
               borderRadius: 50,
               alignSelf: 'center',
               borderWidth: 0.2,
-            }}>
-            <Image
-              source={require('@/assets/images/placeholder.jpg')}
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: 50,
-              }}
-            />
-          </View>
+            }}
+          />
+
           <Text
             style={{
               alignSelf: 'center',

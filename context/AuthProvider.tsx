@@ -1,3 +1,4 @@
+import { UserInfo } from '@/types';
 import { Session, User } from '@supabase/supabase-js';
 import React, {
   PropsWithChildren,
@@ -13,6 +14,7 @@ type AuthProps = {
   session: Session | null;
   initialized?: boolean;
   signOut?: () => void;
+  userInfo: UserInfo | null;
 };
 
 // initialize react context
@@ -30,11 +32,12 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     // Listen for changes to authentication state
-    const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data } = supabase.auth.onAuthStateChange(async (_, session) => {
       setSession(session);
       setUser(session ? session.user : null);
       setInitialized(true);
     });
+
     return () => {
       data.subscription.unsubscribe();
     };

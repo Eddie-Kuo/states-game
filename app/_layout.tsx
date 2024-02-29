@@ -1,6 +1,11 @@
-import { Slot, useRouter, useSegments } from 'expo-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import { AuthProvider, useAuth } from '../context/AuthProvider';
+
+// tanstack query
+const queryClient = new QueryClient();
 
 // Makes sure the user is authenticated before accessing protected pages
 const InitialLayout = () => {
@@ -23,14 +28,40 @@ const InitialLayout = () => {
     }
   }, [session, initialized]);
 
-  return <Slot />;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name='(modal)/ProfileEditModal'
+        options={{
+          presentation: 'modal',
+          headerShown: true,
+          headerTitle: 'Edit Profile',
+          headerStyle: {
+            backgroundColor: 'slategrey',
+          },
+          headerTitleStyle: {
+            color: '#fff',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Text style={{ color: '#fff', fontWeight: '300', fontSize: 18 }}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+    </Stack>
+  );
 };
 
 // Wrap the app with the AuthProvider
 const RootLayout = () => {
   return (
     <AuthProvider>
-      <InitialLayout />
+      <QueryClientProvider client={queryClient}>
+        <InitialLayout />
+      </QueryClientProvider>
     </AuthProvider>
   );
 };
