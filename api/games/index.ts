@@ -23,7 +23,7 @@ export const useStartNewGame = () => {
       console.log(data.userId);
       const { data: gameData, error } = await supabase
         .from('games')
-        .insert({ players: [data.userId, data.opponentId] })
+        .insert({ player_one_id: data.userId, player_two_id: data.opponentId })
         .select()
         .single();
 
