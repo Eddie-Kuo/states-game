@@ -1,12 +1,12 @@
+import {
+  useUpdateUserAvatarImage,
+  useUpdateUserInfo,
+  useUserInfo,
+} from '@/api/user-customization';
 import AvatarImage from '@/components/AvatarImage';
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
-import { getUserInfo } from '@/lib/actions/getUserInfo';
-import { selectNewImage } from '@/lib/actions/selectNewImage';
-import { updateUserInfo } from '@/lib/actions/updateUserInfo';
 import { Ionicons } from '@expo/vector-icons';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -18,42 +18,20 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  */
 
 export const ProfileEditModal = () => {
-  const queryClient = useQueryClient();
   const router = useRouter();
   const { user } = useAuth();
-  const [firstName, setFirstName] = useState<string>();
+  const [firstName, setFirstName] = useState<string | undefined>();
   const [lastName, setLastName] = useState<string | undefined>();
   const [username, setUsername] = useState<string | undefined>();
 
-  const fetchUserData = async () => {
-    if (!user) return;
-    const data = await getUserInfo(user.id);
-    return data;
-  };
-
-  const { data: userInfo } = useQuery({
-    queryKey: ['userInfo'],
-    queryFn: fetchUserData,
-  });
-
-  const { mutateAsync: updateUser } = useMutation({
-    mutationFn: updateUserInfo,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-    },
-  });
-
-  const { mutateAsync: updateUserAvatarImage } = useMutation({
-    mutationFn: selectNewImage,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-    },
-  });
+  const { mutate: updateUserInfo } = useUpdateUserInfo();
+  const { data: userInfo } = useUserInfo(user!.id);
+  const { mutate: updateUserAvatarImage } = useUpdateUserAvatarImage();
 
   const handleUpdateUserInfo = async () => {
     const userId = userInfo!.id;
     try {
-      await updateUser({ firstName, lastName, username, userId });
+      updateUserInfo({ firstName, lastName, username, userId });
     } catch (error) {
       console.log('🚀 ~ handleUpdateUserInfo ~ error:', error);
     } finally {
@@ -65,7 +43,7 @@ export const ProfileEditModal = () => {
     if (!userInfo) return;
     const userId = userInfo.id;
     try {
-      await updateUserAvatarImage(userId);
+      updateUserAvatarImage(userId);
     } catch (error) {
       console.log('🚀 ~ handleUpdateUserImage ~ error:', error);
     }

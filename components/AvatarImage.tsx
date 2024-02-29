@@ -1,9 +1,9 @@
+import { useUserInfo } from '@/api/user-customization';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 // @ts-ignore
 import placeholder from '@/assets/images/placeholder.jpg';
 import { useAuth } from '@/context/AuthProvider';
-import { getUserInfo } from '@/lib/actions/getUserInfo';
 const avatar_placeholder = Image.resolveAssetSource(placeholder).uri;
 
 type AvatarImageProps = {
@@ -15,12 +15,12 @@ type AvatarImageProps = {
 const AvatarImage = ({ styleProps, children }: AvatarImageProps) => {
   const { user } = useAuth();
   const [avatarURL, setAvatarURL] = useState<string>(avatar_placeholder);
+  const { data: userInfo } = useUserInfo(user!.id);
 
   useEffect(() => {
     const fetchUserAvatarURL = async () => {
       if (!user) return;
-      const data = await getUserInfo(user.id);
-      setAvatarURL(data!.avatar_url);
+      setAvatarURL(userInfo.avatar_url);
     };
     fetchUserAvatarURL();
   });
@@ -44,5 +44,3 @@ const AvatarImage = ({ styleProps, children }: AvatarImageProps) => {
 };
 
 export default AvatarImage;
-
-const styles = StyleSheet.create({});

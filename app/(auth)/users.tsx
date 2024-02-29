@@ -1,10 +1,11 @@
+import { useUserList } from '@/api/user-customization';
 import { useAuth } from '@/context/AuthProvider';
-import { supabase } from '@/lib/initSupabase';
 import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Image,
   ListRenderItem,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -22,25 +23,60 @@ interface Profile {
 
 const Users = () => {
   const [users, setUsers] = useState<Profile[] | null>();
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<Profile | null>();
   const { user } = useAuth();
 
+  const { data: userList } = useUserList(user!.id);
+
   useEffect(() => {
-    if (!user) return;
-    const fetchUsers = async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select()
-        .neq('id', user.id);
+    if (userList) {
+      setUsers(userList);
+    }
+  }, [userList]);
 
-      setUsers(data);
-    };
+  const confirmationModal = (user: Profile) => {
+    return (
+      <Modal visible={openModal} animationType='slide' transparent={true}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'transparent',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'lightpink',
+              width: '90%',
+              height: 200,
+              padding: 15,
+              borderRadius: 15,
+            }}>
+            <TouchableOpacity onPress={() => setOpenModal(false)}>
+              <Text>Close</Text>
+            </TouchableOpacity>
+            <Text>Would you like to start a game with {user?.email}</Text>
+            <TouchableOpacity>
+              <Text>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
 
-    fetchUsers();
-  }, []);
+  const openConfirmationModal = (user: Profile) => {
+    setSelectedUser(user);
+    setOpenModal(true);
+  };
 
+  // Render items function for Flatlist
   const renderUsers: ListRenderItem<Profile> = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.listItemContainer}>
+      <TouchableOpacity
+        style={styles.listItemContainer}
+        onPress={() => openConfirmationModal(item)}>
         <View style={styles.listItemDetailsContainer}>
           {item.avatar_url ? (
             <Image
@@ -70,6 +106,7 @@ const Users = () => {
         data={users}
         keyExtractor={(user) => user.id}
       />
+      {confirmationModal(selectedUser!)}
     </View>
   );
 };
