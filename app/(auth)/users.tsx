@@ -1,6 +1,7 @@
 import { useStartNewGame } from '@/api/games';
 import { useUserList } from '@/api/user-customization';
 import { useAuth } from '@/context/AuthProvider';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
   FlatList,
@@ -27,6 +28,7 @@ const Users = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Profile | null>();
   const { user } = useAuth();
+  const router = useRouter();
 
   const { data: userList } = useUserList(user!.id);
   const { mutate: startNewGame } = useStartNewGame();
@@ -43,6 +45,8 @@ const Users = () => {
       setOpenModal(false);
     } catch (error) {
       console.log('🚀 ~ onConfirmStartGame ~ error:', error);
+    } finally {
+      router.navigate('/(auth)/home');
     }
   };
 
