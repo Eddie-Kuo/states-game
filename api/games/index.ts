@@ -5,11 +5,19 @@ export const useGameList = (userId: string) => {
   return useQuery({
     queryKey: ['games'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('games').select('*');
-      // .eq('profile_id', userId);
+      const { data, error } = await supabase
+        .from('games')
+        .select('id')
+        .or(`player_one_id.eq.${userId},player_two_id.eq.${userId}`);
       if (error) {
+        console.log('🚀 ~ queryFn: ~ error:', error);
         throw new Error(error.message);
       }
+      const indexArr: any = [];
+
+      data.map((element) => indexArr.push(element.id));
+
+      console.log('GAME_IDS', indexArr);
       return data;
     },
   });
