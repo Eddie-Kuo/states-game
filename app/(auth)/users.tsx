@@ -1,3 +1,4 @@
+import { useStartNewGame } from '@/api/games';
 import { useUserList } from '@/api/user-customization';
 import { useAuth } from '@/context/AuthProvider';
 import React, { useEffect, useState } from 'react';
@@ -28,12 +29,22 @@ const Users = () => {
   const { user } = useAuth();
 
   const { data: userList } = useUserList(user!.id);
+  const { mutate: startNewGame } = useStartNewGame();
 
   useEffect(() => {
     if (userList) {
       setUsers(userList);
     }
   }, [userList]);
+
+  const onConfirmStartGame = () => {
+    try {
+      startNewGame({ userId: user?.id, opponentId: selectedUser?.id });
+      setOpenModal(false);
+    } catch (error) {
+      console.log('🚀 ~ onConfirmStartGame ~ error:', error);
+    }
+  };
 
   const confirmationModal = (user: Profile) => {
     return (
@@ -57,7 +68,7 @@ const Users = () => {
               <Text>Close</Text>
             </TouchableOpacity>
             <Text>Would you like to start a game with {user?.email}</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onConfirmStartGame}>
               <Text>Confirm</Text>
             </TouchableOpacity>
           </View>
