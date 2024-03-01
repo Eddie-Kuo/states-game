@@ -2,7 +2,14 @@ import { useGameList } from '@/api/games';
 import { useAuth } from '@/context/AuthProvider';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  ListRenderItem,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 type Game = {
   id: string;
@@ -26,6 +33,14 @@ const Home = () => {
     }
   }, [gameList]);
 
+  const renderGames: ListRenderItem<Game> = ({ item }) => {
+    return (
+      <TouchableOpacity>
+        <Text>{item.id}</Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -42,8 +57,23 @@ const Home = () => {
         }}>
         <Text>Edit Profile</Text>
       </TouchableOpacity>
-      <Text>Hello!! You are in the home screen</Text>
-      <Text>Email: {user?.email}</Text>
+      <View
+        style={{ marginTop: 50, width: '100%', alignItems: 'center', gap: 5 }}>
+        <Text style={{ fontSize: 25, fontWeight: '600' }}>Your Games</Text>
+        <View
+          style={{
+            width: '95%',
+            height: 1,
+            backgroundColor: 'grey',
+            opacity: 0.3,
+          }}
+        />
+        <FlatList
+          renderItem={renderGames}
+          data={games}
+          keyExtractor={(game) => game.id}
+        />
+      </View>
     </View>
   );
 };
@@ -53,7 +83,6 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
 });
