@@ -18,12 +18,10 @@ const AvatarImage = ({ styleProps, children }: AvatarImageProps) => {
   const { data: userInfo } = useUserInfo(user!.id);
 
   useEffect(() => {
-    const fetchUserAvatarURL = async () => {
-      if (!user) return;
+    if (userInfo) {
       setAvatarURL(userInfo.avatar_url);
-    };
-    fetchUserAvatarURL();
-  });
+    }
+  }, [userInfo]);
 
   return (
     <View

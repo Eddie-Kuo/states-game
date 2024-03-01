@@ -1,14 +1,12 @@
 import CustomDrawerContent from '@/components/CustomDrawerContent';
 import CustomHomeHeaderLeft from '@/components/CustomHomeHeaderLeft';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { Image, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const AuthenticatedLayout = () => {
-  const navigation = useNavigation();
   return (
     // Required after Expo SDK 50
     <GestureHandlerRootView style={{ flex: 1 }}>
