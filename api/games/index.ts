@@ -13,11 +13,7 @@ export const useGameList = (userId: string) => {
         console.log('🚀 ~ queryFn: ~ error:', error);
         throw new Error(error.message);
       }
-      const indexArr: any = [];
 
-      data.map((element) => indexArr.push(element.id));
-
-      console.log('GAME_IDS', indexArr);
       return data;
     },
   });
