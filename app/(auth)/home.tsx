@@ -34,6 +34,15 @@ const Home = () => {
   }, [gameList]);
 
   const renderGames: ListRenderItem<Game> = ({ item }) => {
+    // const { data: opposingUser } = useUserInfo(item.id);
+    // console.log(opposingUser);
+    // each Item is a game
+    // within each game we have player one and player two id and progress
+    // 1. we need to know which player the current player is
+    // const opposingPlayer = item.player_one_id === user.id ? item.player_two_id
+    // 2. then we need to fetch the user info based on the opposing player id
+    // 3. display the opposing player data in the return jsx
+
     return (
       <TouchableOpacity>
         <Text>{item.id}</Text>
