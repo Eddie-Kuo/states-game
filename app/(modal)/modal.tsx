@@ -17,7 +17,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  * - function to update userData on submit
  */
 
-export const ProfileEditModal = () => {
+export const modal = () => {
   const router = useRouter();
   const { user } = useAuth();
   const [firstName, setFirstName] = useState<string | undefined>();
@@ -97,7 +97,7 @@ export const ProfileEditModal = () => {
   );
 };
 
-export default ProfileEditModal;
+export default modal;
 
 const styles = StyleSheet.create({
   container: { paddingTop: 20, gap: 10, alignItems: 'center' },

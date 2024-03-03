@@ -31,7 +31,7 @@ const InitialLayout = () => {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name='(modal)/ProfileEditModal'
+        name='(modal)/modal'
         options={{
           presentation: 'modal',
           headerShown: true,

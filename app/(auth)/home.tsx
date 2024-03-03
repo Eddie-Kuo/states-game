@@ -42,7 +42,7 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => router.push('/ProfileEditModal')}
+        onPress={() => router.push('/modal')}
         style={{
           position: 'absolute',
           top: 5,
