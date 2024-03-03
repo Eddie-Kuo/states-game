@@ -67,6 +67,7 @@ const Home = () => {
           }}
         />
         <FlatList
+          style={{ margin: 10, height: '100%' }}
           renderItem={renderGames}
           data={games}
           keyExtractor={(game) => game.id}

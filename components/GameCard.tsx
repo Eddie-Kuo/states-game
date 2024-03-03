@@ -2,7 +2,8 @@ import { useAuth } from '@/context/AuthProvider';
 import { supabase } from '@/lib/initSupabase';
 import { Game, UserInfo } from '@/types';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import OpponentAvatar from './OpponentAvatar';
 
 type GameCardProps = {
   item: Game;
@@ -24,14 +25,32 @@ const GameCard = ({ item }: GameCardProps) => {
           .eq('id', opposingPlayerId)
           .single();
         setOpponent(data);
+
+        if (error) {
+          throw new Error(error.message);
+        }
       };
       fetchOpposingPlayer();
     }
   }, []);
 
   return (
-    <TouchableOpacity>
-      <Text>{opponent?.email}</Text>
+    <TouchableOpacity
+      style={{
+        backgroundColor: 'lightgrey',
+        padding: 15,
+        borderRadius: 15,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginVertical: 2,
+        flexDirection: 'row',
+      }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <OpponentAvatar avatarUrl={opponent?.avatar_url} />
+        <Text>{opponent?.email}</Text>
+      </View>
+      <Text style={{ fontWeight: '500' }}>50/50 - 50/50</Text>
     </TouchableOpacity>
   );
 };
