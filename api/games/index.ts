@@ -7,7 +7,7 @@ export const useGameList = (userId: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('games')
-        .select('id')
+        .select()
         .or(`player_one_id.eq.${userId},player_two_id.eq.${userId}`);
       if (error) {
         console.log('🚀 ~ queryFn: ~ error:', error);
@@ -24,7 +24,6 @@ export const useStartNewGame = () => {
 
   return useMutation({
     async mutationFn(data: any) {
-      console.log(data.userId);
       const { data: gameData, error } = await supabase
         .from('games')
         .insert({ player_one_id: data.userId, player_two_id: data.opponentId })
@@ -35,9 +34,8 @@ export const useStartNewGame = () => {
         console.log('🚀 ~ mutationFn ~ error:', error);
         throw new Error(error.message);
       }
-      console.log('GAME_DATA', gameData.id);
 
-      return gameData.id;
+      return gameData;
     },
     async onSuccess() {
       await queryClient.invalidateQueries({ queryKey: ['games'] });

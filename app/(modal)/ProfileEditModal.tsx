@@ -2,7 +2,7 @@ import {
   useUpdateUserAvatarImage,
   useUpdateUserInfo,
   useUserInfo,
-} from '@/api/user-customization';
+} from '@/api/users';
 import AvatarImage from '@/components/AvatarImage';
 import ProfileEditInput from '@/components/ProfileEditInput';
 import { useAuth } from '@/context/AuthProvider';
