@@ -1,5 +1,5 @@
 import { useStartNewGame } from '@/api/games';
-import { useUserList } from '@/api/user-customization';
+import { useUserList } from '@/api/users';
 import { useAuth } from '@/context/AuthProvider';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
