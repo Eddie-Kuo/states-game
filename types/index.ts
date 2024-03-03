@@ -6,3 +6,10 @@ export interface UserInfo {
   username: string;
   avatar_url: string;
 }
+export interface Game {
+  id: string;
+  player_one_id: string;
+  player_two_id: string;
+  player_one_progress: JSON;
+  player_two_progress: JSON;
+}

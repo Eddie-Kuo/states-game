@@ -1,4 +1,4 @@
-import { useUserInfo } from '@/api/user-customization';
+import { useUserInfo } from '@/api/users';
 import React, { useEffect, useState } from 'react';
 import { Image, View } from 'react-native';
 // @ts-ignore
@@ -18,12 +18,10 @@ const AvatarImage = ({ styleProps, children }: AvatarImageProps) => {
   const { data: userInfo } = useUserInfo(user!.id);
 
   useEffect(() => {
-    const fetchUserAvatarURL = async () => {
-      if (!user) return;
+    if (userInfo) {
       setAvatarURL(userInfo.avatar_url);
-    };
-    fetchUserAvatarURL();
-  });
+    }
+  }, [userInfo]);
 
   return (
     <View
