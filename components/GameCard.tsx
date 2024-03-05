@@ -1,6 +1,7 @@
 import { useAuth } from '@/context/AuthProvider';
 import { supabase } from '@/lib/initSupabase';
 import { Game, UserInfo } from '@/types';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import OpponentAvatar from './OpponentAvatar';
@@ -12,6 +13,7 @@ type GameCardProps = {
 const GameCard = ({ item }: GameCardProps) => {
   const [opponent, setOpponent] = useState<UserInfo | null>();
   const { user } = useAuth();
+  const router = useRouter();
 
   const opposingPlayerId =
     item.player_one_id === user!.id ? item.player_two_id : item.player_one_id;
@@ -36,6 +38,7 @@ const GameCard = ({ item }: GameCardProps) => {
 
   return (
     <TouchableOpacity
+      onPress={() => router.push(`/(auth)/(game)/${25}`)}
       style={{
         backgroundColor: 'lightgrey',
         padding: 15,
