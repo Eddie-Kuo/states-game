@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
 import { AuthProvider, useAuth } from '../context/AuthProvider';
 
 // tanstack query
@@ -21,38 +20,14 @@ const InitialLayout = () => {
 
     if (session && !inAuthGroup) {
       // Redirect authenticated users to the list page
-      router.replace('/(auth)/home');
+      router.replace('/(auth)/(drawer)/home');
     } else if (!session) {
       // Redirect unauthenticated users to the login page
       router.replace('/(public)/login');
     }
   }, [session, initialized]);
 
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        name='(modal)/modal'
-        options={{
-          presentation: 'modal',
-          headerShown: true,
-          headerTitle: 'Edit Profile',
-          headerStyle: {
-            backgroundColor: 'slategrey',
-          },
-          headerTitleStyle: {
-            color: '#fff',
-          },
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()}>
-              <Text style={{ color: '#fff', fontWeight: '300', fontSize: 18 }}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
-    </Stack>
-  );
+  return <Slot />;
 };
 
 // Wrap the app with the AuthProvider
