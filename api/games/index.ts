@@ -13,7 +13,24 @@ export const useGameList = (userId: string) => {
         console.log('🚀 ~ queryFn: ~ error:', error);
         throw new Error(error.message);
       }
+      return data;
+    },
+  });
+};
 
+export const useGameData = (gameId: string) => {
+  return useQuery({
+    queryKey: ['gameData'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('games')
+        .select()
+        .eq('id', gameId)
+        .single();
+      if (error) {
+        console.log('🚀 ~ queryFn: ~ error:', error);
+        throw new Error(error.message);
+      }
       return data;
     },
   });

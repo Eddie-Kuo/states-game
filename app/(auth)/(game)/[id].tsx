@@ -1,44 +1,61 @@
+import { useGameData } from '@/api/games';
 import { useAuth } from '@/context/AuthProvider';
-import { supabase } from '@/lib/initSupabase';
 import { Game } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+
+type Opponent = {
+  id: string | undefined;
+  progress: JSON | undefined;
+};
 
 const GameScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [gameContents, setGameContents] = useState<Game | null>();
+  const [gameContent, setGameContent] = useState<Game | null>();
+  const [opponent, setOpponent] = useState<Opponent | null>();
   const { user } = useAuth();
 
-  // set the opposing players id and progress
+  const { data: gameData } = useGameData(id);
   useEffect(() => {
-    if (id) {
-      const fetchGameDetails = async () => {
-        const { data, error } = await supabase
-          .from('games')
-          .select()
-          .eq('id', id)
-          .single();
+    if (gameData) {
+      setGameContent(gameData);
 
-        if (error) {
-          return new Error(error.message);
-        }
-        setGameContents(data);
-        return data;
-      };
-      fetchGameDetails();
+      // set the opponent info
+      user?.id === gameData.player_one_id
+        ? setOpponent({
+            id: gameData.player_two_id,
+            progress: gameData.player_two_progress,
+          })
+        : setOpponent({
+            id: gameData.player_one_id,
+            progress: gameData.player_one_progress,
+          });
     }
-  }, []);
-
-  const opposingPlayerId =
-    gameContents?.player_one_id === user!.id
-      ? gameContents.player_two_id
-      : gameContents?.player_one_id;
+  }, [gameData]);
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Game ID: {id}</Text>
-    </View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'white',
+      }}>
+      <View>
+        <Text>
+          {user?.id} v.s {opponent?.id}
+        </Text>
+      </View>
+      <View
+        style={{
+          width: '95%',
+          height: 1,
+          backgroundColor: 'grey',
+          opacity: 0.3,
+        }}
+      />
+      {/* <FlatList data={playerProgress} renderItem={renderList} /> */}
+    </SafeAreaView>
   );
 };
 
