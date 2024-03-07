@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 type StateCardProps = {
   state: {
     state: string;
-    seen: string;
+    seen: boolean;
   };
 };
 
 const StateCard = ({ state }: StateCardProps) => {
+  const [checkboxState, setCheckboxState] = useState(state.seen);
   return (
     <View
       style={{

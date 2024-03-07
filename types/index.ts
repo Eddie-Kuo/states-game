@@ -15,8 +15,8 @@ export interface Game {
 }
 
 export interface StateEntry {
-  seen: string;
   state: string;
+  seen: boolean;
 }
 export interface Player {
   id: string | undefined;
