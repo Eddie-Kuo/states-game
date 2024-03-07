@@ -1,6 +1,7 @@
 import { useGameData } from '@/api/games';
+import StateCard from '@/components/StateCard';
 import { useAuth } from '@/context/AuthProvider';
-import { Game } from '@/types';
+import { Game, Player, StateEntry } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
@@ -12,16 +13,6 @@ import {
   View,
 } from 'react-native';
 
-interface StateEntry {
-  seen: string;
-  state: string;
-}
-interface Player {
-  id: string | undefined;
-  playerProgress: {
-    progress: StateEntry[];
-  };
-}
 const GameScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [gameContent, setGameContent] = useState<Game | null>();
@@ -58,7 +49,7 @@ const GameScreen = () => {
   }, [gameData]);
 
   const renderList: ListRenderItem<StateEntry> = ({ item }) => {
-    return <Text>{item.state}</Text>;
+    return <StateCard state={item} />;
   };
 
   return (
@@ -81,7 +72,12 @@ const GameScreen = () => {
           opacity: 0.3,
         }}
       />
-      <View style={{ width: '100%', alignItems: 'center', padding: 10 }}>
+      <View
+        style={{
+          width: '100%',
+          alignItems: 'center',
+          padding: 10,
+        }}>
         <FlatList
           data={currentPlayer?.playerProgress.progress}
           renderItem={renderList}
