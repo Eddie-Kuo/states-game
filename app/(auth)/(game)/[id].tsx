@@ -3,17 +3,31 @@ import { useAuth } from '@/context/AuthProvider';
 import { Game } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  ListRenderItem,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
-type Opponent = {
+interface StateEntry {
+  seen: string;
+  state: string;
+}
+interface Player {
   id: string | undefined;
-  progress: JSON | undefined;
-};
-
+  playerProgress: {
+    progress: StateEntry[];
+  };
+}
 const GameScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [gameContent, setGameContent] = useState<Game | null>();
-  const [opponent, setOpponent] = useState<Opponent | null>();
+  const [opponent, setOpponent] = useState<Player>();
+  const [currentPlayer, setCurrentPlayer] = useState<Player>();
+
   const { user } = useAuth();
 
   const { data: gameData } = useGameData(id);
@@ -21,18 +35,31 @@ const GameScreen = () => {
     if (gameData) {
       setGameContent(gameData);
 
-      // set the opponent info
-      user?.id === gameData.player_one_id
-        ? setOpponent({
-            id: gameData.player_two_id,
-            progress: gameData.player_two_progress,
-          })
-        : setOpponent({
-            id: gameData.player_one_id,
-            progress: gameData.player_one_progress,
-          });
+      if (user?.id === gameData.player_one_id) {
+        setOpponent({
+          id: gameData.player_two_id,
+          playerProgress: gameData.player_two_progress,
+        });
+        setCurrentPlayer({
+          id: gameData.player_one_id,
+          playerProgress: gameData.player_one_progress,
+        });
+      } else {
+        setOpponent({
+          id: gameData.player_one_id,
+          playerProgress: gameData.player_one_progress,
+        });
+        setCurrentPlayer({
+          id: gameData.player_two_id,
+          playerProgress: gameData.player_two_progress,
+        });
+      }
     }
   }, [gameData]);
+
+  const renderList: ListRenderItem<StateEntry> = ({ item }) => {
+    return <Text>{item.state}</Text>;
+  };
 
   return (
     <SafeAreaView
@@ -41,7 +68,7 @@ const GameScreen = () => {
         alignItems: 'center',
         backgroundColor: 'white',
       }}>
-      <View>
+      <View style={{ padding: 10 }}>
         <Text>
           {user?.id} v.s {opponent?.id}
         </Text>
@@ -54,7 +81,12 @@ const GameScreen = () => {
           opacity: 0.3,
         }}
       />
-      {/* <FlatList data={playerProgress} renderItem={renderList} /> */}
+      <View style={{ width: '100%', alignItems: 'center', padding: 10 }}>
+        <FlatList
+          data={currentPlayer?.playerProgress.progress}
+          renderItem={renderList}
+        />
+      </View>
     </SafeAreaView>
   );
 };
