@@ -75,7 +75,7 @@ const GameScreen = () => {
       <View
         style={{
           width: '100%',
-          alignItems: 'center',
+          justifyContent: 'flex-start',
           padding: 10,
         }}>
         <FlatList
