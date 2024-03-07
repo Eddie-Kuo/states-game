@@ -13,3 +13,14 @@ export interface Game {
   player_one_progress: JSON;
   player_two_progress: JSON;
 }
+
+export interface StateEntry {
+  state: string;
+  seen: boolean;
+}
+export interface Player {
+  id: string | undefined;
+  playerProgress: {
+    progress: StateEntry[];
+  };
+}
