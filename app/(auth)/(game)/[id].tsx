@@ -1,7 +1,7 @@
-import { useGameData } from '@/api/games';
+import { useGameData, useSeenState } from '@/api/games';
 import StateCard from '@/components/StateCard';
 import { useAuth } from '@/context/AuthProvider';
-import { Game, Player, StateEntry } from '@/types';
+import { Game, Player } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
@@ -16,40 +16,70 @@ import {
 const GameScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [gameContent, setGameContent] = useState<Game | null>();
-  const [opponent, setOpponent] = useState<Player>();
   const [currentPlayer, setCurrentPlayer] = useState<Player>();
 
   const { user } = useAuth();
 
   const { data: gameData } = useGameData(id);
+  const { mutate: updateSeenState } = useSeenState();
   useEffect(() => {
     if (gameData) {
       setGameContent(gameData);
 
       if (user?.id === gameData.player_one_id) {
-        setOpponent({
-          id: gameData.player_two_id,
-          playerProgress: gameData.player_two_progress,
-        });
         setCurrentPlayer({
+          title: 'player_one',
           id: gameData.player_one_id,
           playerProgress: gameData.player_one_progress,
+          playerStates: Object.keys(gameData.player_one_progress),
         });
       } else {
-        setOpponent({
-          id: gameData.player_one_id,
-          playerProgress: gameData.player_one_progress,
-        });
         setCurrentPlayer({
+          title: 'player_two',
           id: gameData.player_two_id,
           playerProgress: gameData.player_two_progress,
+          playerStates: Object.keys(gameData.player_two_progress),
         });
       }
     }
   }, [gameData]);
 
-  const renderList: ListRenderItem<StateEntry> = ({ item }) => {
-    return <StateCard state={item} />;
+  const renderList: ListRenderItem<string> = ({ item }) => {
+    // const handleSeenState = () => {
+    //   const targetState = item;
+    //   currentPlayer!.playerProgress[targetState] = true;
+    //   console.log(currentPlayer?.playerProgress);
+    //   try {
+    //     updateSeenState({ currentPlayer, id });
+    //   } catch (error) {
+    //     console.log('🚀 ~ handleUpdateUserInfo ~ error:', error);
+    //   }
+    // };
+
+    return <StateCard item={item} currentPlayer={currentPlayer!} gameId={id} />;
+    //   <View
+    //     style={{
+    //       backgroundColor: 'lightgrey',
+    //       padding: 15,
+    //       borderRadius: 15,
+    //       width: '100%',
+    //       alignItems: 'center',
+    //       marginVertical: 2,
+    //       flexDirection: 'row',
+    //     }}>
+    //     <BouncyCheckbox
+    //       onPress={handleSeenState}
+    //       size={25}
+    //       fillColor='pink'
+    //       unfillColor='#FFFFFF'
+    //       text={`${item}`}
+    //       textStyle={{ color: 'black' }}
+    //       innerIconStyle={{ borderWidth: 2 }}
+    //       bounceEffectIn={0.9}
+    //       bounceEffectOut={1}
+    //     />
+    //   </View>
+    // );
   };
 
   return (
@@ -61,7 +91,10 @@ const GameScreen = () => {
       }}>
       <View style={{ padding: 10 }}>
         <Text>
-          {user?.id} v.s {opponent?.id}
+          {user?.id} v.s{' '}
+          {currentPlayer?.title === 'player_one'
+            ? gameContent?.player_two_id
+            : gameContent?.player_one_id}
         </Text>
       </View>
       <View
@@ -78,10 +111,7 @@ const GameScreen = () => {
           justifyContent: 'flex-start',
           padding: 10,
         }}>
-        <FlatList
-          data={currentPlayer?.playerProgress.progress}
-          renderItem={renderList}
-        />
+        <FlatList data={currentPlayer?.playerStates} renderItem={renderList} />
       </View>
     </SafeAreaView>
   );

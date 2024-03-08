@@ -59,3 +59,28 @@ export const useStartNewGame = () => {
     },
   });
 };
+
+export const useSeenState = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn(data: any) {
+      const { data: updatedGameData, error } = await supabase
+        .from('games')
+        .update({
+          player_one_progress: data.currentPlayer.playerProgress,
+        })
+        .eq('id', data.gameId);
+
+      if (error) {
+        console.log('🚀 ~ mutationFn ~ error:', error);
+      }
+
+      return updatedGameData;
+    },
+
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ['gameData'] });
+    },
+  });
+};

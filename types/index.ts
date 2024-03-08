@@ -16,11 +16,11 @@ export interface Game {
 
 export interface StateEntry {
   state: string;
-  seen: boolean;
+  // seen: boolean;
 }
 export interface Player {
+  title: string;
   id: string | undefined;
-  playerProgress: {
-    progress: StateEntry[];
-  };
+  playerProgress: Record<string, boolean>;
+  playerStates: string[];
 }
