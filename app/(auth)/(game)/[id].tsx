@@ -1,4 +1,4 @@
-import { useGameData, useSeenState } from '@/api/games';
+import { useGameData } from '@/api/games';
 import StateCard from '@/components/StateCard';
 import { useAuth } from '@/context/AuthProvider';
 import { Game, Player } from '@/types';
@@ -17,69 +17,39 @@ const GameScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [gameContent, setGameContent] = useState<Game | null>();
   const [currentPlayer, setCurrentPlayer] = useState<Player>();
+  const [states, setStates] = useState();
 
   const { user } = useAuth();
 
   const { data: gameData } = useGameData(id);
-  const { mutate: updateSeenState } = useSeenState();
+  // const { data: playerProgress } = usePlayerProgress({
+  //   playerId: currentPlayer?.id,
+  //   userId: currentPlayer?.user_id,
+  // });
+
+  //* Note: Fixed the database schema for better data flow but facing a new problem with fetching the current user's progress as the timing of the fetch calls are clashing.
+  //! Fetch functions are a bit messy but that comes with how my current database is set up.
+
   useEffect(() => {
     if (gameData) {
       setGameContent(gameData);
 
-      if (user?.id === gameData.player_one_id) {
-        setCurrentPlayer({
-          title: 'player_one',
-          id: gameData.player_one_id,
-          playerProgress: gameData.player_one_progress,
-          playerStates: Object.keys(gameData.player_one_progress),
-        });
+      if (user?.id === gameContent?.playerOne.user_id) {
+        setCurrentPlayer(gameData.playerOne);
       } else {
-        setCurrentPlayer({
-          title: 'player_two',
-          id: gameData.player_two_id,
-          playerProgress: gameData.player_two_progress,
-          playerStates: Object.keys(gameData.player_two_progress),
-        });
+        setCurrentPlayer(gameData.playerTwo);
       }
     }
   }, [gameData]);
 
-  const renderList: ListRenderItem<string> = ({ item }) => {
-    // const handleSeenState = () => {
-    //   const targetState = item;
-    //   currentPlayer!.playerProgress[targetState] = true;
-    //   console.log(currentPlayer?.playerProgress);
-    //   try {
-    //     updateSeenState({ currentPlayer, id });
-    //   } catch (error) {
-    //     console.log('🚀 ~ handleUpdateUserInfo ~ error:', error);
-    //   }
-    // };
+  // useEffect(() => {
+  //   if (playerProgress) {
+  //     setStates(playerProgress.progress);
+  //   }
+  // }, [gameContent, currentPlayer]);
 
+  const renderList: ListRenderItem<string> = ({ item }) => {
     return <StateCard item={item} currentPlayer={currentPlayer!} gameId={id} />;
-    //   <View
-    //     style={{
-    //       backgroundColor: 'lightgrey',
-    //       padding: 15,
-    //       borderRadius: 15,
-    //       width: '100%',
-    //       alignItems: 'center',
-    //       marginVertical: 2,
-    //       flexDirection: 'row',
-    //     }}>
-    //     <BouncyCheckbox
-    //       onPress={handleSeenState}
-    //       size={25}
-    //       fillColor='pink'
-    //       unfillColor='#FFFFFF'
-    //       text={`${item}`}
-    //       textStyle={{ color: 'black' }}
-    //       innerIconStyle={{ borderWidth: 2 }}
-    //       bounceEffectIn={0.9}
-    //       bounceEffectOut={1}
-    //     />
-    //   </View>
-    // );
   };
 
   return (
@@ -91,10 +61,7 @@ const GameScreen = () => {
       }}>
       <View style={{ padding: 10 }}>
         <Text>
-          {user?.id} v.s{' '}
-          {currentPlayer?.title === 'player_one'
-            ? gameContent?.player_two_id
-            : gameContent?.player_one_id}
+          {gameContent?.playerOne.user_id} v.s {gameContent?.playerTwo.user_id}
         </Text>
       </View>
       <View
