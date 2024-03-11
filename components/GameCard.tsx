@@ -38,7 +38,7 @@ const GameCard = ({ item }: GameCardProps) => {
 
   return (
     <TouchableOpacity
-      onPress={() => router.push(`/(auth)/(game)/${25}`)}
+      onPress={() => router.push(`/(auth)/(game)/${item.id}`)}
       style={{
         backgroundColor: 'lightgrey',
         padding: 15,
