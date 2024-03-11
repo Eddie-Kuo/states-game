@@ -78,7 +78,7 @@ const GameScreen = () => {
           justifyContent: 'flex-start',
           padding: 10,
         }}>
-        <FlatList data={currentPlayer?.playerStates} renderItem={renderList} />
+        <FlatList data={states} renderItem={renderList} />
       </View>
     </SafeAreaView>
   );
