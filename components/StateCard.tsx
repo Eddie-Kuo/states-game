@@ -1,16 +1,32 @@
+import { useSeenState } from '@/api/games';
+import { Player } from '@/types';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 type StateCardProps = {
-  state: {
-    state: string;
-    seen: boolean;
-  };
+  item: string;
+  currentPlayer: Player;
+  gameId: string;
 };
 
-const StateCard = ({ state }: StateCardProps) => {
-  const [checkboxState, setCheckboxState] = useState(state.seen);
+const StateCard = ({ item, currentPlayer, gameId }: StateCardProps) => {
+  const [checkboxState, setCheckboxState] = useState(
+    currentPlayer?.playerProgress[item]
+  );
+  const { mutate: updateSeenState } = useSeenState();
+
+  const handleSeenState = () => {
+    const targetState = item;
+    setCheckboxState(!checkboxState);
+    currentPlayer!.playerProgress[targetState] = true;
+    console.log(currentPlayer?.playerProgress);
+    try {
+      updateSeenState({ currentPlayer, gameId });
+    } catch (error) {
+      console.log('🚀 ~ handleUpdateUserInfo ~ error:', error);
+    }
+  };
   return (
     <View
       style={{
@@ -23,11 +39,12 @@ const StateCard = ({ state }: StateCardProps) => {
         flexDirection: 'row',
       }}>
       <BouncyCheckbox
-        onPress={(isChecked: boolean) => {}}
+        onPress={handleSeenState}
+        isChecked={checkboxState}
         size={25}
         fillColor='pink'
         unfillColor='#FFFFFF'
-        text={`${state.state}`}
+        text={`${item}`}
         textStyle={{ color: 'black' }}
         innerIconStyle={{ borderWidth: 2 }}
         bounceEffectIn={0.9}

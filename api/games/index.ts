@@ -27,11 +27,50 @@ export const useGameData = (gameId: string) => {
         .select()
         .eq('id', gameId)
         .single();
+
+      if (!data) {
+        return;
+      }
+
+      const { data: playerOne } = await supabase
+        .from('players')
+        .select()
+        .eq('id', data.player_ids[0])
+        .single();
+      const { data: playerTwo } = await supabase
+        .from('players')
+        .select()
+        .eq('id', data.player_ids[1])
+        .single();
+
       if (error) {
         console.log('🚀 ~ queryFn: ~ error:', error);
         throw new Error(error.message);
       }
-      return data;
+      return {
+        playerOne,
+        playerTwo,
+      };
+    },
+  });
+};
+
+export const usePlayerProgress = ({ playerId, userId }: any) => {
+  return useQuery({
+    queryKey: ['playerProgress'],
+    queryFn: async () => {
+      const { data: playerProgress, error } = await supabase
+        .from('players')
+        .select('progress')
+        .match({ id: playerId, user_id: userId })
+        .single();
+
+      if (error) {
+        console.log('🚀 ~ mutationFn ~ error:', error);
+      }
+
+      console.log('🚀 ~ mutationFn ~ playerProgress:', playerProgress);
+      return playerProgress;
     },
   });
 };
@@ -41,9 +80,25 @@ export const useStartNewGame = () => {
 
   return useMutation({
     async mutationFn(data: any) {
+      const { data: currUserPlayerId } = await supabase
+        .from('players')
+        .insert({ user_id: data.userId })
+        .select('id')
+        .single();
+
+      const { data: oppUserPlayerId } = await supabase
+        .from('players')
+        .insert({ user_id: data.opponentId })
+        .select('id')
+        .single();
+
       const { data: gameData, error } = await supabase
         .from('games')
-        .insert({ player_one_id: data.userId, player_two_id: data.opponentId })
+        .insert({
+          player_ids: [currUserPlayerId!.id, oppUserPlayerId!.id],
+          player_one_id: data.userId,
+          player_two_id: data.opponentId,
+        })
         .select()
         .single();
 
@@ -56,6 +111,31 @@ export const useStartNewGame = () => {
     },
     async onSuccess() {
       await queryClient.invalidateQueries({ queryKey: ['games'] });
+    },
+  });
+};
+
+export const useSeenState = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn(data: any) {
+      const { data: updatedGameData, error } = await supabase
+        .from('games')
+        .update({
+          player_one_progress: data.currentPlayer.playerProgress,
+        })
+        .eq('id', data.gameId);
+
+      if (error) {
+        console.log('🚀 ~ mutationFn ~ error:', error);
+      }
+
+      return updatedGameData;
+    },
+
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ['gameData'] });
     },
   });
 };

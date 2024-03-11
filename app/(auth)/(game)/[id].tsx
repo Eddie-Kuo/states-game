@@ -1,7 +1,7 @@
 import { useGameData } from '@/api/games';
 import StateCard from '@/components/StateCard';
 import { useAuth } from '@/context/AuthProvider';
-import { Game, Player, StateEntry } from '@/types';
+import { Game, Player } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
@@ -16,40 +16,40 @@ import {
 const GameScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [gameContent, setGameContent] = useState<Game | null>();
-  const [opponent, setOpponent] = useState<Player>();
   const [currentPlayer, setCurrentPlayer] = useState<Player>();
+  const [states, setStates] = useState();
 
   const { user } = useAuth();
 
   const { data: gameData } = useGameData(id);
+  // const { data: playerProgress } = usePlayerProgress({
+  //   playerId: currentPlayer?.id,
+  //   userId: currentPlayer?.user_id,
+  // });
+
+  //* Note: Fixed the database schema for better data flow but facing a new problem with fetching the current user's progress as the timing of the fetch calls are clashing.
+  //! Fetch functions are a bit messy but that comes with how my current database is set up.
+
   useEffect(() => {
     if (gameData) {
       setGameContent(gameData);
 
-      if (user?.id === gameData.player_one_id) {
-        setOpponent({
-          id: gameData.player_two_id,
-          playerProgress: gameData.player_two_progress,
-        });
-        setCurrentPlayer({
-          id: gameData.player_one_id,
-          playerProgress: gameData.player_one_progress,
-        });
+      if (user?.id === gameContent?.playerOne.user_id) {
+        setCurrentPlayer(gameData.playerOne);
       } else {
-        setOpponent({
-          id: gameData.player_one_id,
-          playerProgress: gameData.player_one_progress,
-        });
-        setCurrentPlayer({
-          id: gameData.player_two_id,
-          playerProgress: gameData.player_two_progress,
-        });
+        setCurrentPlayer(gameData.playerTwo);
       }
     }
   }, [gameData]);
 
-  const renderList: ListRenderItem<StateEntry> = ({ item }) => {
-    return <StateCard state={item} />;
+  // useEffect(() => {
+  //   if (playerProgress) {
+  //     setStates(playerProgress.progress);
+  //   }
+  // }, [gameContent, currentPlayer]);
+
+  const renderList: ListRenderItem<string> = ({ item }) => {
+    return <StateCard item={item} currentPlayer={currentPlayer!} gameId={id} />;
   };
 
   return (
@@ -61,7 +61,7 @@ const GameScreen = () => {
       }}>
       <View style={{ padding: 10 }}>
         <Text>
-          {user?.id} v.s {opponent?.id}
+          {gameContent?.playerOne.user_id} v.s {gameContent?.playerTwo.user_id}
         </Text>
       </View>
       <View
@@ -78,10 +78,7 @@ const GameScreen = () => {
           justifyContent: 'flex-start',
           padding: 10,
         }}>
-        <FlatList
-          data={currentPlayer?.playerProgress.progress}
-          renderItem={renderList}
-        />
+        <FlatList data={states} renderItem={renderList} />
       </View>
     </SafeAreaView>
   );
