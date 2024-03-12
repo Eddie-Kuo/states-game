@@ -27,25 +27,13 @@ const GameScreen = () => {
   }, [gameData]);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: 'white',
-      }}>
+    <SafeAreaView style={styles.container}>
       <View style={{ padding: 10 }}>
         <Text>
           {gameContent?.playerOne.user_id} v.s {gameContent?.playerTwo.user_id}
         </Text>
       </View>
-      <View
-        style={{
-          width: '95%',
-          height: 1,
-          backgroundColor: 'grey',
-          opacity: 0.3,
-        }}
-      />
+      <View style={styles.separator} />
       <StatesList gameId={id} />
     </SafeAreaView>
   );
@@ -53,4 +41,16 @@ const GameScreen = () => {
 
 export default GameScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  separator: {
+    width: '95%',
+    height: 1,
+    backgroundColor: 'grey',
+    opacity: 0.3,
+  },
+});

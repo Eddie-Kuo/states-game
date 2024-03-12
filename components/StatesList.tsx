@@ -38,12 +38,7 @@ const StatesList = ({ gameId }: StatesListProps) => {
     );
   };
   return (
-    <View
-      style={{
-        width: '100%',
-        justifyContent: 'flex-start',
-        padding: 10,
-      }}>
+    <View style={styles.container}>
       <FlatList data={states} renderItem={renderList} />
     </View>
   );
@@ -51,4 +46,11 @@ const StatesList = ({ gameId }: StatesListProps) => {
 
 export default StatesList;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    justifyContent: 'flex-start',
+    padding: 10,
+    paddingBottom: 60,
+  },
+});

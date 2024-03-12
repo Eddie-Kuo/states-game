@@ -37,16 +37,7 @@ const StateCard = ({
     }
   };
   return (
-    <View
-      style={{
-        backgroundColor: 'lightgrey',
-        padding: 15,
-        borderRadius: 15,
-        width: '100%',
-        alignItems: 'center',
-        marginVertical: 2,
-        flexDirection: 'row',
-      }}>
+    <View style={styles.container}>
       <BouncyCheckbox
         onPress={handleSeenState}
         isChecked={checkboxState}
@@ -65,4 +56,14 @@ const StateCard = ({
 
 export default StateCard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'lightgrey',
+    padding: 15,
+    borderRadius: 15,
+    width: '100%',
+    alignItems: 'center',
+    marginVertical: 2,
+    flexDirection: 'row',
+  },
+});
