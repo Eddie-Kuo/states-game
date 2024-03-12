@@ -1,35 +1,19 @@
 import { useGameData } from '@/api/games';
-import StateCard from '@/components/StateCard';
+import StatesList from '@/components/StatesList';
 import { useAuth } from '@/context/AuthProvider';
 import { Game, Player } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import {
-  FlatList,
-  ListRenderItem,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 const GameScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [gameContent, setGameContent] = useState<Game | null>();
   const [currentPlayer, setCurrentPlayer] = useState<Player>();
-  const [states, setStates] = useState();
 
   const { user } = useAuth();
 
   const { data: gameData } = useGameData(id);
-  // const { data: playerProgress } = usePlayerProgress({
-  //   playerId: currentPlayer?.id,
-  //   userId: currentPlayer?.user_id,
-  // });
-
-  //* Note: Fixed the database schema for better data flow but facing a new problem with fetching the current user's progress as the timing of the fetch calls are clashing.
-  //! Fetch functions are a bit messy but that comes with how my current database is set up.
-
   useEffect(() => {
     if (gameData) {
       setGameContent(gameData);
@@ -41,16 +25,6 @@ const GameScreen = () => {
       }
     }
   }, [gameData]);
-
-  // useEffect(() => {
-  //   if (playerProgress) {
-  //     setStates(playerProgress.progress);
-  //   }
-  // }, [gameContent, currentPlayer]);
-
-  const renderList: ListRenderItem<string> = ({ item }) => {
-    return <StateCard item={item} currentPlayer={currentPlayer!} gameId={id} />;
-  };
 
   return (
     <SafeAreaView
@@ -72,14 +46,7 @@ const GameScreen = () => {
           opacity: 0.3,
         }}
       />
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'flex-start',
-          padding: 10,
-        }}>
-        <FlatList data={states} renderItem={renderList} />
-      </View>
+      <StatesList gameId={id} />
     </SafeAreaView>
   );
 };
