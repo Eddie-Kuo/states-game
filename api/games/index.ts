@@ -55,24 +55,6 @@ export const useGameData = (gameId: string) => {
   });
 };
 
-export const usePlayerProgress = ({ userId, gameId }: any) => {
-  return useQuery({
-    queryKey: ['playerProgress'],
-    queryFn: async () => {
-      const { data: playerProgress, error } = await supabase
-        .from('players')
-        .select('progress')
-        .match({ user_id: userId, game_id: gameId })
-        .single();
-
-      if (error) {
-        console.log('🚀 ~ mutationFn ~ error:', error);
-      }
-      return playerProgress;
-    },
-  });
-};
-
 export const useStartNewGame = () => {
   const queryClient = useQueryClient();
 
@@ -110,31 +92,6 @@ export const useStartNewGame = () => {
     },
     async onSuccess() {
       await queryClient.invalidateQueries({ queryKey: ['games'] });
-    },
-  });
-};
-
-export const useSeenState = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    async mutationFn(data: any) {
-      const { data: updatedGameData, error } = await supabase
-        .from('players')
-        .update({
-          progress: data.playerProgress.progress,
-        })
-        .match({ game_id: data.gameId, user_id: data.userId });
-
-      if (error) {
-        console.log('🚀 ~ mutationFn ~ error:', error);
-      }
-
-      return updatedGameData;
-    },
-
-    async onSuccess() {
-      await queryClient.invalidateQueries({ queryKey: ['gameData'] });
     },
   });
 };

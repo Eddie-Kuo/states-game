@@ -1,5 +1,5 @@
-import { usePlayerProgress } from '@/api/games';
 import { useAuth } from '@/context/AuthProvider';
+import { supabase } from '@/lib/initSupabase';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native';
@@ -13,18 +13,30 @@ const StatesList = ({ gameId }: StatesListProps) => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuth();
   const [states, setStates] = useState<any>();
-
-  const { data: playerProgress } = usePlayerProgress({
-    userId: user?.id,
-    gameId: id,
-  });
+  const [playerProgress, setPlayerProgress] =
+    useState<Record<string, boolean>>();
 
   useEffect(() => {
-    if (playerProgress) {
-      const stateNames = Object.entries(playerProgress.progress);
-      setStates(stateNames);
-    }
-  }, [playerProgress]);
+    const fetchPlayerProgress = async () => {
+      const { data, error } = await supabase
+        .from('players')
+        .select('progress')
+        .match({ user_id: user?.id, game_id: gameId })
+        .single();
+
+      if (data) {
+        setPlayerProgress(data);
+        setStates(Object.entries(data.progress));
+      }
+      if (error) {
+        console.log('🚀 ~ usePlayerProgress ~ error:', error);
+      }
+
+      return data;
+    };
+
+    fetchPlayerProgress();
+  }, []);
 
   const renderList: ListRenderItem<[string, boolean]> = ({ item }) => {
     const [stateName, seen] = item;
