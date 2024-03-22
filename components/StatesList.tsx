@@ -1,4 +1,3 @@
-// import { usePlayerProgress } from '@/api/games';
 import { useAuth } from '@/context/AuthProvider';
 import { supabase } from '@/lib/initSupabase';
 import { useLocalSearchParams } from 'expo-router';
