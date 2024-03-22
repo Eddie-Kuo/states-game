@@ -1,5 +1,5 @@
-import { useSeenState } from '@/api/games';
 import { useAuth } from '@/context/AuthProvider';
+import { updateSeenState } from '@/lib/actions/updateSeenState';
 import { Player } from '@/types';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -21,8 +21,6 @@ const StateCard = ({
 }: StateCardProps) => {
   const [checkboxState, setCheckboxState] = useState<boolean>(seen);
   const { user } = useAuth();
-
-  const { mutate: updateSeenState } = useSeenState();
 
   const handleSeenState = () => {
     const userId = user?.id;

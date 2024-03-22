@@ -14,20 +14,26 @@ const StatesList = ({ gameId }: StatesListProps) => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuth();
   const [states, setStates] = useState<any>();
+  const [playerProgress, setPlayerProgress] =
+    useState<Record<string, boolean>>();
 
   useEffect(() => {
     const fetchPlayerProgress = async () => {
-      const { data: playerProgress, error } = await supabase
+      const { data, error } = await supabase
         .from('players')
         .select('progress')
         .match({ user_id: user?.id, game_id: gameId })
         .single();
 
+      if (data) {
+        setPlayerProgress(data);
+        setStates(Object.entries(data.progress));
+      }
       if (error) {
         console.log('🚀 ~ usePlayerProgress ~ error:', error);
       }
-      setStates(Object.entries(playerProgress?.progress));
-      return playerProgress;
+
+      return data;
     };
 
     fetchPlayerProgress();
@@ -39,7 +45,7 @@ const StatesList = ({ gameId }: StatesListProps) => {
       <StateCard
         stateName={stateName}
         seen={seen}
-        // playerProgress={playerProgress}
+        playerProgress={playerProgress}
         gameId={id}
       />
     );
