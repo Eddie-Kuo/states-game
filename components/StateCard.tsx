@@ -10,7 +10,7 @@ type StateCardProps = {
   seen: boolean;
   currentPlayer?: Player | undefined;
   gameId: string;
-  playerProgress: any;
+  playerProgress?: any;
 };
 
 const StateCard = ({
