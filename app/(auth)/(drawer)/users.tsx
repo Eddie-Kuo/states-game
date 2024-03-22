@@ -1,8 +1,10 @@
 import { useStartNewGame } from '@/api/games';
 import { useUserList } from '@/api/users';
 import { useAuth } from '@/context/AuthProvider';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+
 import {
   FlatList,
   Image,
@@ -62,19 +64,75 @@ const Users = () => {
           }}>
           <View
             style={{
-              backgroundColor: 'lightpink',
+              backgroundColor: 'bisque',
               width: '90%',
-              height: 200,
-              padding: 15,
+              height: 250,
               borderRadius: 15,
             }}>
-            <TouchableOpacity onPress={() => setOpenModal(false)}>
-              <Text>Close</Text>
-            </TouchableOpacity>
-            <Text>Would you like to start a game with {user?.email}</Text>
-            <TouchableOpacity onPress={onConfirmStartGame}>
-              <Text>Confirm</Text>
-            </TouchableOpacity>
+            <Ionicons
+              style={{
+                alignSelf: 'center',
+                bottom: -30,
+                shadowColor: '#000',
+                shadowOpacity: 0.3,
+                shadowOffset: {
+                  height: 2,
+                  width: 2,
+                },
+                zIndex: 10,
+              }}
+              name='heart'
+              size={100}
+            />
+
+            <View
+              style={{
+                position: 'absolute',
+                backgroundColor: 'gainsboro',
+                height: 150,
+                bottom: 0,
+                width: '100%',
+                borderRadius: 15,
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 20,
+              }}>
+              <Text style={{ textAlign: 'center' }}>
+                Would you like to start a game with {user?.email}
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  gap: 10,
+                }}>
+                <TouchableOpacity
+                  onPress={() => setOpenModal(false)}
+                  style={{
+                    borderWidth: 1,
+                    width: 100,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 10,
+                    borderColor: 'red',
+                  }}>
+                  <Text style={{ color: 'red' }}>Close</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={onConfirmStartGame}
+                  style={{
+                    borderWidth: 1,
+                    width: 100,
+                    height: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 10,
+                    borderColor: 'green',
+                  }}>
+                  <Text style={{ color: 'green' }}>Confirm</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </View>
       </Modal>
