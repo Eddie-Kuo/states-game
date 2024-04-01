@@ -88,7 +88,7 @@ const Users = () => {
             <View
               style={{
                 position: 'absolute',
-                backgroundColor: 'gainsboro',
+                backgroundColor: 'lightblue',
                 height: 150,
                 bottom: 0,
                 width: '100%',
