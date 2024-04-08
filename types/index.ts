@@ -7,8 +7,11 @@ export interface UserInfo {
   avatar_url: string;
 }
 export interface Game {
-  playerOne: Player;
-  playerTwo: Player;
+  id: number;
+  player_one_id: string;
+  player_two_id: string;
+  player_one_progress: Record<string, boolean>;
+  player_two_progress: Record<string, boolean>;
 }
 
 export interface StateEntry {
