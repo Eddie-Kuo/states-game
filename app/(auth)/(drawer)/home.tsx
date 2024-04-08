@@ -61,7 +61,8 @@ const Home = () => {
           style={{ margin: 10, height: '100%' }}
           renderItem={renderGames}
           data={games}
-          keyExtractor={(game) => game.id}
+          // keyExtractor value needs to be a string
+          keyExtractor={(game) => game.id.toString()}
         />
       </View>
     </View>
