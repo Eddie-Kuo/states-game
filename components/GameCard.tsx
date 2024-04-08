@@ -39,25 +39,29 @@ const GameCard = ({ item }: GameCardProps) => {
   return (
     <TouchableOpacity
       onPress={() => router.push(`/(auth)/(game)/${item.id}`)}
-      style={{
-        backgroundColor: 'lightgrey',
-        padding: 15,
-        borderRadius: 15,
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginVertical: 2,
-        flexDirection: 'row',
-      }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+      style={styles.gameCard}>
+      <View style={styles.opposingPlayerText}>
         <OpponentAvatar avatarUrl={opponent?.avatar_url} />
         <Text>{opponent?.email}</Text>
       </View>
-      <Text style={{ fontWeight: '500' }}>50/50 - 50/50</Text>
+      <Text style={styles.score}>50/50 - 50/50</Text>
     </TouchableOpacity>
   );
 };
 
 export default GameCard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  gameCard: {
+    backgroundColor: 'lightgrey',
+    padding: 15,
+    borderRadius: 15,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 2,
+    flexDirection: 'row',
+  },
+  opposingPlayerText: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  score: { fontWeight: '500' },
+});
