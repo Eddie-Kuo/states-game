@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/initSupabase';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import { Alert, Platform } from 'react-native';
+import { Alert, Platform, StyleSheet } from 'react-native';
 
 export default function SignInWithApple() {
   if (Platform.OS === 'ios')
@@ -9,14 +9,7 @@ export default function SignInWithApple() {
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
         cornerRadius={25}
-        style={{
-          height: 40,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'row',
-          padding: 24,
-        }}
+        style={styles.signInButton}
         onPress={async () => {
           try {
             const credential = await AppleAuthentication.signInAsync({
@@ -51,3 +44,14 @@ export default function SignInWithApple() {
     );
   return <>{/* Todo: Implement Android Auth options. */}</>;
 }
+
+const styles = StyleSheet.create({
+  signInButton: {
+    height: 40,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: 24,
+  },
+});
