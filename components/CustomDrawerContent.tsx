@@ -4,7 +4,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AvatarImage from './AvatarImage';
 
@@ -19,39 +19,16 @@ const CustomDrawerContent = (props: any) => {
         scrollEnabled={false}
         contentContainerStyle={{ backgroundColor: 'lightslategray' }}>
         <View style={{ padding: 20 }}>
-          <AvatarImage
-            styleProps={{
-              width: 100,
-              height: 100,
-              borderRadius: 50,
-              alignSelf: 'center',
-              borderWidth: 0.2,
-            }}
-          />
+          <AvatarImage styleProps={{ ...styles.avatarImage }} />
 
-          <Text
-            style={{
-              alignSelf: 'center',
-              fontWeight: '600',
-              fontSize: 16,
-              paddingTop: 10,
-              color: 'aliceblue',
-            }}>
-            {user?.email}
-          </Text>
+          <Text style={styles.userEmail}>{user?.email}</Text>
         </View>
         <View style={{ paddingVertical: 10, backgroundColor: '#fff' }}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
 
-      <View
-        style={{
-          borderTopColor: '#dde3fe',
-          borderTopWidth: 1,
-          padding: 20,
-          paddingBottom: 20 + bottom,
-        }}>
+      <View style={{ ...styles.logoutContainer, paddingBottom: 20 + bottom }}>
         <TouchableOpacity
           onPress={signOut}
           style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
@@ -68,3 +45,25 @@ const CustomDrawerContent = (props: any) => {
 };
 
 export default CustomDrawerContent;
+
+const styles = StyleSheet.create({
+  avatarImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    alignSelf: 'center',
+    borderWidth: 0.2,
+  },
+  userEmail: {
+    alignSelf: 'center',
+    fontWeight: '600',
+    fontSize: 16,
+    paddingTop: 10,
+    color: 'aliceblue',
+  },
+  logoutContainer: {
+    borderTopColor: '#dde3fe',
+    borderTopWidth: 1,
+    padding: 20,
+  },
+});

@@ -1,8 +1,10 @@
 import { useStartNewGame } from '@/api/games';
 import { useUserList } from '@/api/users';
 import { useAuth } from '@/context/AuthProvider';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+
 import {
   FlatList,
   Image,
@@ -53,28 +55,34 @@ const Users = () => {
   const confirmationModal = (user: Profile) => {
     return (
       <Modal visible={openModal} animationType='slide' transparent={true}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent',
-          }}>
-          <View
-            style={{
-              backgroundColor: 'lightpink',
-              width: '90%',
-              height: 200,
-              padding: 15,
-              borderRadius: 15,
-            }}>
-            <TouchableOpacity onPress={() => setOpenModal(false)}>
-              <Text>Close</Text>
-            </TouchableOpacity>
-            <Text>Would you like to start a game with {user?.email}</Text>
-            <TouchableOpacity onPress={onConfirmStartGame}>
-              <Text>Confirm</Text>
-            </TouchableOpacity>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalTopHalf}>
+            <Ionicons style={styles.modalIcon} name='heart' size={100} />
+
+            <View style={styles.modalTextContainer}>
+              <Text style={{ textAlign: 'center' }}>
+                Would you like to start a game with {user?.email}
+              </Text>
+              <View style={styles.modalButtonContainer}>
+                <TouchableOpacity
+                  onPress={() => setOpenModal(false)}
+                  style={{
+                    ...styles.modalButton,
+                    borderColor: 'red',
+                  }}>
+                  <Text style={{ color: 'red' }}>Close</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={onConfirmStartGame}
+                  style={{
+                    ...styles.modalButton,
+                    borderColor: 'green',
+                  }}>
+                  <Text style={{ color: 'green' }}>Confirm</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </View>
       </Modal>
@@ -165,4 +173,50 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   listItemText: { fontWeight: '500' },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  modalTopHalf: {
+    backgroundColor: 'bisque',
+    width: '90%',
+    height: 250,
+    borderRadius: 15,
+  },
+  modalIcon: {
+    alignSelf: 'center',
+    bottom: -30,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowOffset: {
+      height: 2,
+      width: 2,
+    },
+    zIndex: 10,
+  },
+  modalTextContainer: {
+    position: 'absolute',
+    backgroundColor: 'lightblue',
+    height: 150,
+    bottom: 0,
+    width: '100%',
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 20,
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  modalButton: {
+    borderWidth: 1,
+    width: 100,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
 });
