@@ -1,19 +1,19 @@
 import { useGameData } from '@/api/games';
 import StatesList from '@/components/StatesList';
 import { useAuth } from '@/context/AuthProvider';
-import { Game, Player } from '@/types';
+import { GameContent, Player } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 const GameScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [gameContent, setGameContent] = useState<Game | null>();
+  const [gameContent, setGameContent] = useState<GameContent | null>();
   const [currentPlayer, setCurrentPlayer] = useState<Player>();
 
   const { user } = useAuth();
-
   const { data: gameData } = useGameData(id);
+
   useEffect(() => {
     if (gameData) {
       setGameContent(gameData);

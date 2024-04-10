@@ -14,6 +14,11 @@ export interface Game {
   player_two_progress: Record<string, boolean>;
 }
 
+export interface GameContent {
+  playerOne: Player;
+  playerTwo: Player;
+}
+
 export interface StateEntry {
   state: string;
 }
