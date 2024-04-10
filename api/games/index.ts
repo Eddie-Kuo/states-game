@@ -43,6 +43,21 @@ export const useGameData = (gameId: string) => {
         .match({ user_id: data.player_ids[1], game_id: gameId })
         .single();
 
+      const { data: playerOneInfo } = await supabase
+        .from('profiles')
+        .select()
+        .match({
+          id: playerOne.user_id,
+        })
+        .single();
+      const { data: playerTwoInfo } = await supabase
+        .from('profiles')
+        .select()
+        .match({
+          id: playerTwo.user_id,
+        })
+        .single();
+
       if (error) {
         console.log('🚀 ~ queryFn: ~ error:', error);
         throw new Error(error.message);
@@ -50,6 +65,8 @@ export const useGameData = (gameId: string) => {
       return {
         playerOne,
         playerTwo,
+        playerOneInfo,
+        playerTwoInfo,
       };
     },
   });

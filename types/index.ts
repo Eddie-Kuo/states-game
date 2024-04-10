@@ -1,3 +1,5 @@
+import { User } from '@supabase/supabase-js';
+
 export interface UserInfo {
   id: string;
   first_name: string;
@@ -17,6 +19,8 @@ export interface Game {
 export interface GameContent {
   playerOne: Player;
   playerTwo: Player;
+  playerOneInfo: User;
+  playerTwoInfo: User;
 }
 
 export interface StateEntry {

@@ -30,7 +30,8 @@ const GameScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={{ padding: 10 }}>
         <Text>
-          {gameContent?.playerOne.user_id} v.s {gameContent?.playerTwo.user_id}
+          {gameContent?.playerOneInfo?.email} v.s{' '}
+          {gameContent?.playerTwoInfo?.email}
         </Text>
       </View>
       <View style={styles.separator} />
