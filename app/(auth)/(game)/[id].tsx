@@ -29,7 +29,7 @@ const GameScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ padding: 10 }}>
-        <Text>
+        <Text style={styles.playerNames}>
           {gameContent?.playerOneInfo?.email} v.s{' '}
           {gameContent?.playerTwoInfo?.email}
         </Text>
@@ -51,7 +51,11 @@ const styles = StyleSheet.create({
   separator: {
     width: '95%',
     height: 1,
-    backgroundColor: 'grey',
-    opacity: 0.3,
+    backgroundColor: '#AAABAE',
+    opacity: 1,
+  },
+  playerNames: {
+    fontWeight: 'bold',
+    paddingVertical: 10,
   },
 });

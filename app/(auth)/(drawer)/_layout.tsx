@@ -1,8 +1,9 @@
+import AvatarImage from '@/components/AvatarImage';
 import CustomDrawerContent from '@/components/CustomDrawerContent';
 import CustomHomeHeaderLeft from '@/components/CustomHomeHeaderLeft';
 import { Ionicons } from '@expo/vector-icons';
 import { Drawer } from 'expo-router/drawer';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -23,14 +24,17 @@ const AuthenticatedLayout = () => {
             drawerIcon: ({ color, size }) => (
               <Ionicons name='home' color={color} size={size} />
             ),
-            headerLeft: () => <CustomHomeHeaderLeft />,
-            headerStyle: {
-              height: 120,
-            },
+            headerLeft: () => (
+              <View>
+                <CustomHomeHeaderLeft />
+                <AvatarImage styleProps={{ ...styles.avatarImage }} />
+              </View>
+            ),
+
             headerBackground: () => {
               return (
                 <Image
-                  style={StyleSheet.absoluteFill}
+                  style={styles.backgroundImage}
                   source={{
                     uri: 'https://images.pexels.com/photos/1831234/pexels-photo-1831234.jpeg',
                   }}
@@ -47,12 +51,32 @@ const AuthenticatedLayout = () => {
             drawerIcon: ({ color, size }) => (
               <Ionicons name='people' color={color} size={size} />
             ),
+            headerLeft: () => <CustomHomeHeaderLeft />,
           }}
         />
       </Drawer>
     </GestureHandlerRootView>
   );
 };
+
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    zIndex: 0,
+  },
+  avatarImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    alignSelf: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
+    position: 'relative',
+    bottom: -30,
+    left: 50,
+    zIndex: 100,
+  },
+});
 
 const CustomScreenOptions = {
   drawerHideStatusBarOnOpen: true,
@@ -62,8 +86,9 @@ const CustomScreenOptions = {
     shadowOpacity: 0, // for iOS
     borderBottomWidth: 0,
   },
-  drawerActiveBackgroundColor: 'lightslategrey',
-  drawerActiveTintColor: '#fff',
+  drawerActiveBackgroundColor: '#AAABAE',
+  drawerActiveTintColor: '#000',
+
   drawerStyle: {
     backgroundColor: '#fff',
   },

@@ -56,7 +56,7 @@ export default StateCard;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#AAABAE',
     padding: 15,
     borderRadius: 15,
     width: '100%',
