@@ -32,11 +32,19 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => router.push('/modal')}
-        style={styles.editProfileButton}>
-        <Text>Edit Profile</Text>
-      </TouchableOpacity>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%',
+          paddingHorizontal: 15,
+        }}>
+        <TouchableOpacity
+          onPress={() => router.push('/modal')}
+          style={styles.editProfileButton}>
+          <Text>Edit Profile</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.gamesContainer}>
         <Text style={styles.gamesHeader}>Your Games</Text>
         <View style={styles.separator} />
@@ -60,10 +68,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   editProfileButton: {
+    height: 35,
     position: 'absolute',
     top: 5,
     right: 5,
     paddingVertical: 8,
+    justifyContent: 'center',
     paddingHorizontal: 12,
     borderWidth: 0.5,
     margin: 4,

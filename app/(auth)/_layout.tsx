@@ -15,7 +15,7 @@ const AuthenticatedLayout = () => {
           headerShown: true,
           headerTitle: 'Edit Profile',
           headerStyle: {
-            backgroundColor: 'slategrey',
+            backgroundColor: '#975E64',
           },
           headerTitleStyle: {
             color: '#fff',

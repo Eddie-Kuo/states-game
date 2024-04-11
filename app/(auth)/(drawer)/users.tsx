@@ -1,7 +1,6 @@
 import { useStartNewGame } from '@/api/games';
 import { useUserList } from '@/api/users';
 import { useAuth } from '@/context/AuthProvider';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 
@@ -57,11 +56,11 @@ const Users = () => {
       <Modal visible={openModal} animationType='slide' transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalTopHalf}>
-            <Ionicons style={styles.modalIcon} name='heart' size={100} />
+            {/* <Ionicons style={styles.modalIcon} name='' size={100} /> */}
 
             <View style={styles.modalTextContainer}>
-              <Text style={{ textAlign: 'center' }}>
-                Would you like to start a game with {user?.email}
+              <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                Would you like to start a game with {user?.email} ?
               </Text>
               <View style={styles.modalButtonContainer}>
                 <TouchableOpacity
@@ -147,8 +146,8 @@ const styles = StyleSheet.create({
   separator: {
     width: '100%',
     height: 1,
-    backgroundColor: 'grey',
-    opacity: 0.2,
+    backgroundColor: '#AAABAE',
+    opacity: 1,
   },
   listItemContainer: {
     flexDirection: 'row',
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 12,
     justifyContent: 'space-between',
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#AAABAE',
     borderRadius: 10,
     width: '100%',
   },
@@ -180,10 +179,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   modalTopHalf: {
-    backgroundColor: 'bisque',
+    backgroundColor: '#975E64',
     width: '90%',
     height: 250,
     borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#AAABAE',
   },
   modalIcon: {
     alignSelf: 'center',
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
   },
   modalTextContainer: {
     position: 'absolute',
-    backgroundColor: 'lightblue',
+    backgroundColor: '#E8EAEB',
     height: 150,
     bottom: 0,
     width: '100%',

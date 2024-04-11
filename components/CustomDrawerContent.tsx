@@ -17,7 +17,7 @@ const CustomDrawerContent = (props: any) => {
       <DrawerContentScrollView
         {...props}
         scrollEnabled={false}
-        contentContainerStyle={{ backgroundColor: 'lightslategray' }}>
+        contentContainerStyle={{ backgroundColor: '#AAABAE' }}>
         <View style={{ padding: 20 }}>
           <AvatarImage styleProps={{ ...styles.avatarImage }} />
 
